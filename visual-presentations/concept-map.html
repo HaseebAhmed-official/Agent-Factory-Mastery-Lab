@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Factory - Concept Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        select, input {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #3182ce;
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .stat {
+            background: #edf2f7;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .stat strong {
+            color: #2d3748;
+        }
+
+        #canvas-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #graph-canvas {
+            display: block;
+            cursor: grab;
+        }
+
+        #graph-canvas:active {
+            cursor: grabbing;
+        }
+
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .legend h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .legend-node {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-edge {
+            width: 20px;
+            height: 2px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            max-width: 300px;
+            z-index: 1000;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 5px;
+        }
+
+        .tooltip-meta {
+            font-size: 12px;
+            color: #cbd5e0;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px;
+            color: #718096;
+        }
+
+        .no-data h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Concept Map</h1>
+            <p class="subtitle">Agent Factory Part 1: General Agents Foundations</p>
+        </header>
+
+        <div class="controls">
+            <div class="filter-group">
+                <label for="filter-lesson">Lesson:</label>
+                <select id="filter-lesson">
+                    <option value="">All Lessons</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filter-depth">Depth:</label>
+                <select id="filter-depth">
+                    <option value="">All Depths</option>
+                    <option value="L1">L1: Fundamentals</option>
+                    <option value="L2">L2: Intermediate</option>
+                    <option value="L3">L3: Advanced</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filter-type">Type:</label>
+                <select id="filter-type">
+                    <option value="">All Types</option>
+                    <option value="concept">Concepts</option>
+                    <option value="framework">Frameworks</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="search">Search:</label>
+                <input type="text" id="search" placeholder="Type to search...">
+            </div>
+
+            <button id="reset-btn">Reset View</button>
+
+            <div class="stats">
+                <div class="stat"><strong id="node-count">0</strong> nodes</div>
+                <div class="stat"><strong id="edge-count">0</strong> edges</div>
+            </div>
+        </div>
+
+        <div id="canvas-container">
+            <canvas id="graph-canvas"></canvas>
+
+            <div class="legend">
+                <h3>Legend</h3>
+                <div class="legend-item">
+                    <div class="legend-node" style="background: #4299e1;"></div>
+                    <span>Concept</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-node" style="background: #48bb78;"></div>
+                    <span>Framework</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-edge" style="background: #a0aec0;"></div>
+                    <span>Related</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-edge" style="background: #f56565; height: 3px;"></div>
+                    <span>Requires</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-edge" style="background: #ed8936; border-top: 2px dashed #ed8936; height: 0;"></div>
+                    <span>Applies To</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tooltip" id="tooltip">
+            <div class="tooltip-title" id="tooltip-title"></div>
+            <div class="tooltip-meta" id="tooltip-meta"></div>
+        </div>
+    </div>
+
+    <script>
+        // Graph rendering engine
+        class ConceptGraph {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.tooltip = document.getElementById('tooltip');
+
+                this.graphData = { nodes: [], edges: [] };
+                this.filteredData = { nodes: [], edges: [] };
+
+                this.viewOffset = { x: 0, y: 0 };
+                this.viewScale = 1.0;
+                this.isDragging = false;
+                this.dragStart = { x: 0, y: 0 };
+                this.hoveredNode = null;
+
+                this.colors = {
+                    concept: '#4299e1',
+                    framework: '#48bb78',
+                    related: '#a0aec0',
+                    requires: '#f56565',
+                    applies_to: '#ed8936'
+                };
+
+                this.setupCanvas();
+                this.setupEventListeners();
+            }
+
+            setupCanvas() {
+                const container = this.canvas.parentElement;
+                this.canvas.width = container.clientWidth;
+                this.canvas.height = 800;
+            }
+
+            setupEventListeners() {
+                // Pan controls
+                this.canvas.addEventListener('mousedown', (e) => {
+                    this.isDragging = true;
+                    this.dragStart = { x: e.offsetX, y: e.offsetY };
+                });
+
+                this.canvas.addEventListener('mousemove', (e) => {
+                    if (this.isDragging) {
+                        const dx = e.offsetX - this.dragStart.x;
+                        const dy = e.offsetY - this.dragStart.y;
+                        this.viewOffset.x += dx;
+                        this.viewOffset.y += dy;
+                        this.dragStart = { x: e.offsetX, y: e.offsetY };
+                        this.render();
+                    } else {
+                        this.handleHover(e);
+                    }
+                });
+
+                this.canvas.addEventListener('mouseup', () => {
+                    this.isDragging = false;
+                });
+
+                this.canvas.addEventListener('mouseleave', () => {
+                    this.isDragging = false;
+                    this.hideTooltip();
+                });
+
+                // Zoom controls
+                this.canvas.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                    this.viewScale *= zoomFactor;
+                    this.viewScale = Math.max(0.1, Math.min(3, this.viewScale));
+                    this.render();
+                });
+
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.setupCanvas();
+                    this.render();
+                });
+            }
+
+            async loadData() {
+                try {
+                    const response = await fetch('concept-map-data.json');
+                    const data = await response.json();
+
+                    if (!data.nodes || data.nodes.length === 0) {
+                        this.showNoData();
+                        return;
+                    }
+
+                    this.graphData = data;
+                    this.computeLayout();
+                    this.applyFilters();
+                    this.populateFilters();
+                    this.updateStats();
+                    this.render();
+                } catch (error) {
+                    console.error('Error loading graph data:', error);
+                    this.showNoData();
+                }
+            }
+
+            showNoData() {
+                const container = this.canvas.parentElement;
+                container.innerHTML = `
+                    <div class="no-data">
+                        <h2>No Concept Data Yet</h2>
+                        <p>Complete your first lesson with the Finish command to generate the concept map.</p>
+                    </div>
+                `;
+            }
+
+            computeLayout() {
+                // Force-directed layout simulation
+                const nodes = this.graphData.nodes;
+                const edges = this.graphData.edges;
+
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+
+                // Initialize positions randomly
+                nodes.forEach(node => {
+                    node.x = Math.random() * (width - 200) + 100;
+                    node.y = Math.random() * (height - 200) + 100;
+                    node.vx = 0;
+                    node.vy = 0;
+                });
+
+                // Simulate physics
+                const iterations = 100;
+                for (let i = 0; i < iterations; i++) {
+                    // Repulsion between all nodes
+                    for (let j = 0; j < nodes.length; j++) {
+                        for (let k = j + 1; k < nodes.length; k++) {
+                            const dx = nodes[k].x - nodes[j].x;
+                            const dy = nodes[k].y - nodes[j].y;
+                            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                            const force = 500 / (dist * dist);
+
+                            nodes[j].vx -= (dx / dist) * force;
+                            nodes[j].vy -= (dy / dist) * force;
+                            nodes[k].vx += (dx / dist) * force;
+                            nodes[k].vy += (dy / dist) * force;
+                        }
+                    }
+
+                    // Attraction along edges
+                    edges.forEach(edge => {
+                        const source = nodes.find(n => n.id === edge.source);
+                        const target = nodes.find(n => n.id === edge.target);
+                        if (!source || !target) return;
+
+                        const dx = target.x - source.x;
+                        const dy = target.y - source.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        const force = dist * 0.01;
+
+                        source.vx += (dx / dist) * force;
+                        source.vy += (dy / dist) * force;
+                        target.vx -= (dx / dist) * force;
+                        target.vy -= (dy / dist) * force;
+                    });
+
+                    // Update positions with damping
+                    nodes.forEach(node => {
+                        node.x += node.vx * 0.5;
+                        node.y += node.vy * 0.5;
+                        node.vx *= 0.8;
+                        node.vy *= 0.8;
+
+                        // Keep in bounds
+                        node.x = Math.max(50, Math.min(width - 50, node.x));
+                        node.y = Math.max(50, Math.min(height - 50, node.y));
+                    });
+                }
+            }
+
+            applyFilters() {
+                const lessonFilter = document.getElementById('filter-lesson').value;
+                const depthFilter = document.getElementById('filter-depth').value;
+                const typeFilter = document.getElementById('filter-type').value;
+                const searchTerm = document.getElementById('search').value.toLowerCase();
+
+                this.filteredData.nodes = this.graphData.nodes.filter(node => {
+                    if (lessonFilter && node.lesson !== lessonFilter) return false;
+                    if (depthFilter && node.depth !== depthFilter) return false;
+                    if (typeFilter && node.type !== typeFilter) return false;
+                    if (searchTerm && !node.label.toLowerCase().includes(searchTerm)) return false;
+                    return true;
+                });
+
+                const nodeIds = new Set(this.filteredData.nodes.map(n => n.id));
+                this.filteredData.edges = this.graphData.edges.filter(edge =>
+                    nodeIds.has(edge.source) && nodeIds.has(edge.target)
+                );
+
+                this.updateStats();
+            }
+
+            populateFilters() {
+                const lessons = new Set(this.graphData.nodes.map(n => n.lesson).filter(Boolean));
+                const lessonSelect = document.getElementById('filter-lesson');
+
+                lessons.forEach(lesson => {
+                    const option = document.createElement('option');
+                    option.value = lesson;
+                    option.textContent = `Lesson ${lesson}`;
+                    lessonSelect.appendChild(option);
+                });
+            }
+
+            updateStats() {
+                document.getElementById('node-count').textContent = this.filteredData.nodes.length;
+                document.getElementById('edge-count').textContent = this.filteredData.edges.length;
+            }
+
+            render() {
+                const ctx = this.ctx;
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                ctx.save();
+                ctx.translate(this.viewOffset.x, this.viewOffset.y);
+                ctx.scale(this.viewScale, this.viewScale);
+
+                // Draw edges
+                this.filteredData.edges.forEach(edge => {
+                    const source = this.graphData.nodes.find(n => n.id === edge.source);
+                    const target = this.graphData.nodes.find(n => n.id === edge.target);
+                    if (!source || !target) return;
+
+                    ctx.beginPath();
+                    ctx.moveTo(source.x, source.y);
+                    ctx.lineTo(target.x, target.y);
+                    ctx.strokeStyle = this.colors[edge.type] || this.colors.related;
+                    ctx.lineWidth = edge.type === 'requires' ? 3 : 2;
+                    if (edge.type === 'applies_to') {
+                        ctx.setLineDash([5, 5]);
+                    } else {
+                        ctx.setLineDash([]);
+                    }
+                    ctx.stroke();
+                });
+
+                // Draw nodes
+                this.filteredData.nodes.forEach(node => {
+                    const isHovered = this.hoveredNode === node.id;
+                    const radius = isHovered ? 12 : 8;
+
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.colors[node.type] || this.colors.concept;
+                    ctx.fill();
+
+                    if (isHovered) {
+                        ctx.strokeStyle = '#2d3748';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+
+                    // Draw label
+                    ctx.fillStyle = '#2d3748';
+                    ctx.font = isHovered ? 'bold 12px sans-serif' : '11px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(node.label, node.x, node.y + radius + 15);
+                });
+
+                ctx.restore();
+            }
+
+            handleHover(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const x = (e.offsetX - this.viewOffset.x) / this.viewScale;
+                const y = (e.offsetY - this.viewOffset.y) / this.viewScale;
+
+                let foundNode = null;
+                for (const node of this.filteredData.nodes) {
+                    const dx = x - node.x;
+                    const dy = y - node.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 12) {
+                        foundNode = node;
+                        break;
+                    }
+                }
+
+                if (foundNode) {
+                    this.hoveredNode = foundNode.id;
+                    this.showTooltip(foundNode, e.clientX, e.clientY);
+                    this.render();
+                } else if (this.hoveredNode !== null) {
+                    this.hoveredNode = null;
+                    this.hideTooltip();
+                    this.render();
+                }
+            }
+
+            showTooltip(node, x, y) {
+                const title = document.getElementById('tooltip-title');
+                const meta = document.getElementById('tooltip-meta');
+
+                title.textContent = node.label;
+
+                const metaLines = [];
+                if (node.lesson) metaLines.push(`Lesson: ${node.lesson}`);
+                if (node.depth) metaLines.push(`Depth: ${node.depth}`);
+                if (node.type) metaLines.push(`Type: ${node.type}`);
+                if (node.file) metaLines.push(`File: ${node.file.split('/').pop()}`);
+
+                meta.innerHTML = metaLines.join('<br>');
+
+                this.tooltip.style.left = (x + 15) + 'px';
+                this.tooltip.style.top = (y + 15) + 'px';
+                this.tooltip.classList.add('visible');
+            }
+
+            hideTooltip() {
+                this.tooltip.classList.remove('visible');
+            }
+
+            resetView() {
+                this.viewOffset = { x: 0, y: 0 };
+                this.viewScale = 1.0;
+                this.render();
+            }
+        }
+
+        // Initialize
+        const graph = new ConceptGraph('graph-canvas');
+        graph.loadData();
+
+        // Filter controls
+        document.getElementById('filter-lesson').addEventListener('change', () => {
+            graph.applyFilters();
+            graph.render();
+        });
+
+        document.getElementById('filter-depth').addEventListener('change', () => {
+            graph.applyFilters();
+            graph.render();
+        });
+
+        document.getElementById('filter-type').addEventListener('change', () => {
+            graph.applyFilters();
+            graph.render();
+        });
+
+        document.getElementById('search').addEventListener('input', () => {
+            graph.applyFilters();
+            graph.render();
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            graph.resetView();
+        });
+    </script>
+</body>
+</html>

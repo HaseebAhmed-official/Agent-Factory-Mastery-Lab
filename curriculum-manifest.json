@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "last_sync": null,
+  "source": {
+    "base_url": "https://agentfactory.panaversity.org/docs/General-Agents-Foundations/",
+    "toc_url": "https://agentfactory.panaversity.org/docs/General-Agents-Foundations/"
+  },
+  "lessons": {},
+  "stats": {
+    "total_lessons": 0,
+    "synced": 0,
+    "deprecated": 0,
+    "chapters": {}
+  },
+  "discovery": {
+    "errors": [],
+    "log_entries": 0
+  },
+  "_instructions": "This is a template. Run 'Sync' command or 'python scripts/sync-curriculum-discover.py' to populate with actual curriculum data."
+}

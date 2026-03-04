@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Agent Factory Flashcard Deck Template",
+  "description": "Anki-compatible flashcard deck for Agent Factory lessons. Can be imported to Anki or used with custom flashcard tools.",
+  "deck_metadata": {
+    "deck_name": "Agent Factory - Lesson {X.Y}: {Lesson Title}",
+    "lesson": "{X.Y}",
+    "chapter": "{N}",
+    "generated_date": "{YYYY-MM-DD}",
+    "total_cards": 0,
+    "tags": [
+      "agent-factory",
+      "chapter-{N}",
+      "lesson-{X.Y}",
+      "{concept-tag-1}",
+      "{concept-tag-2}"
+    ],
+    "difficulty": "{beginner|intermediate|advanced}",
+    "estimated_study_time": "{N} minutes",
+    "spaced_repetition_compatible": true
+  },
+
+  "cards": [
+    {
+      "card_id": 1,
+      "card_type": "basic",
+      "front": "What is {Term/Concept}?",
+      "back": "{Clear, concise definition}",
+      "tags": ["terminology", "definition"],
+      "difficulty": "easy",
+      "hints": [],
+      "related_cards": []
+    },
+
+    {
+      "card_id": 2,
+      "card_type": "basic",
+      "front": "Define: {Technical Term}",
+      "back": "**Definition**: {Full definition}\n\n**Example**: {One-sentence example}",
+      "tags": ["terminology", "vocabulary"],
+      "difficulty": "easy",
+      "hints": ["Think about {clue}"],
+      "related_cards": [1]
+    },
+
+    {
+      "card_id": 3,
+      "card_type": "cloze",
+      "text": "{Concept X} is like {{c1::{analogy}}} because {{c2::{reason}}}",
+      "tags": ["analogy", "conceptual"],
+      "difficulty": "medium",
+      "hints": [],
+      "related_cards": [1, 2]
+    },
+
+    {
+      "card_id": 4,
+      "card_type": "basic",
+      "front": "Why does {Concept/Pattern} matter?",
+      "back": "**Purpose**: {What problem it solves}\n\n**Benefit**: {Why you'd use it}\n\n**Use Case**: {When to apply it}",
+      "tags": ["conceptual", "application"],
+      "difficulty": "medium",
+      "hints": ["Consider what problem this solves"],
+      "related_cards": [1, 2, 3]
+    },
+
+    {
+      "card_id": 5,
+      "card_type": "basic",
+      "front": "How does {Concept/Pattern} work?",
+      "back": "**Steps**:\n1. {Step 1}\n2. {Step 2}\n3. {Step 3}\n\n**Outcome**: {What it produces}",
+      "tags": ["mechanism", "how-it-works"],
+      "difficulty": "medium",
+      "hints": ["Break it down into steps"],
+      "related_cards": [4]
+    },
+
+    {
+      "card_id": 6,
+      "card_type": "basic",
+      "front": "Compare {Concept A} vs {Concept B}",
+      "back": "**{Concept A}**:\n- {Key characteristic 1}\n- {Use case}\n\n**{Concept B}**:\n- {Key characteristic 2}\n- {Use case}\n\n**Key Difference**: {Main distinction}",
+      "tags": ["comparison", "analysis"],
+      "difficulty": "hard",
+      "hints": ["Think about when you'd use each"],
+      "related_cards": [1, 2]
+    },
+
+    {
+      "card_id": 7,
+      "card_type": "basic",
+      "front": "What goes wrong: {Anti-Pattern Name}",
+      "back": "**Mistake**: {What people do wrong}\n\n**Why It Fails**: {Root cause}\n\n**Fix**: {Correct approach}\n\n**Prevention**: {How to avoid it}",
+      "tags": ["anti-pattern", "failure-mode"],
+      "difficulty": "hard",
+      "hints": ["What's the opposite of the correct pattern?"],
+      "related_cards": [4, 5]
+    },
+
+    {
+      "card_id": 8,
+      "card_type": "cloze",
+      "text": "The {N} key components of {Concept} are: {{c1::{Component 1}}}, {{c2::{Component 2}}}, and {{c3::{Component 3}}}",
+      "tags": ["components", "structure"],
+      "difficulty": "medium",
+      "hints": [],
+      "related_cards": [1, 5]
+    },
+
+    {
+      "card_id": 9,
+      "card_type": "basic",
+      "front": "When should you use {Pattern/Approach}?",
+      "back": "**Use When**:\n- {Condition 1}\n- {Condition 2}\n\n**Don't Use When**:\n- {Condition 3}\n- {Condition 4}\n\n**Alternative**: {What to use instead in those cases}",
+      "tags": ["application", "decision-making"],
+      "difficulty": "hard",
+      "hints": ["Think about the triggering conditions"],
+      "related_cards": [6]
+    },
+
+    {
+      "card_id": 10,
+      "card_type": "basic",
+      "front": "Code/Pattern Recognition:\n\n```\n{Code snippet or pattern example}\n```\n\nWhat pattern is this?",
+      "back": "**Pattern**: {Pattern Name}\n\n**Purpose**: {What it does}\n\n**Key Indicators**: {What to look for}",
+      "tags": ["pattern-recognition", "code"],
+      "difficulty": "hard",
+      "hints": ["Look for {distinctive feature}"],
+      "related_cards": [5, 9]
+    },
+
+    {
+      "card_id": 11,
+      "card_type": "basic",
+      "front": "Edge Case: What happens when {unusual condition}?",
+      "back": "**Behavior**: {How system responds}\n\n**Reason**: {Why it behaves this way}\n\n**Handling**: {How to account for it}",
+      "tags": ["edge-case", "deep-understanding"],
+      "difficulty": "hard",
+      "hints": ["Think about boundary conditions"],
+      "related_cards": [5]
+    },
+
+    {
+      "card_id": 12,
+      "card_type": "basic",
+      "front": "Prerequisite Check: What must you understand before learning {Concept}?",
+      "back": "**Prerequisites**:\n1. {Prerequisite 1} (from Lesson {X.Y})\n2. {Prerequisite 2} (from Lesson {X.Y})\n\n**Why**: {How they connect to this concept}",
+      "tags": ["prerequisites", "connections"],
+      "difficulty": "easy",
+      "hints": [],
+      "related_cards": []
+    },
+
+    {
+      "card_id": 13,
+      "card_type": "basic",
+      "front": "What concept does {This Concept} enable you to learn next?",
+      "back": "**Unlocks**:\n1. {Future Concept 1} (Lesson {X.Y})\n2. {Future Concept 2} (Lesson {X.Y})\n\n**Connection**: {How this concept is used in those}",
+      "tags": ["connections", "roadmap"],
+      "difficulty": "medium",
+      "hints": [],
+      "related_cards": [12]
+    },
+
+    {
+      "card_id": 14,
+      "card_type": "basic",
+      "front": "Scenario: {Real-world situation}\n\nHow would you apply {Concept}?",
+      "back": "**Approach**:\n1. {Step 1 with concept}\n2. {Step 2 with concept}\n3. {Step 3 with concept}\n\n**Outcome**: {Expected result}",
+      "tags": ["application", "scenario"],
+      "difficulty": "hard",
+      "hints": ["Start by identifying {key element}"],
+      "related_cards": [9, 10]
+    },
+
+    {
+      "card_id": 15,
+      "card_type": "cloze",
+      "text": "The key takeaway from this lesson is: {{c1::{Most important insight in one sentence}}}",
+      "tags": ["summary", "key-takeaway"],
+      "difficulty": "medium",
+      "hints": [],
+      "related_cards": [1, 2, 3, 4]
+    }
+  ],
+
+  "card_type_guide": {
+    "basic": "Front/back card with question and answer",
+    "cloze": "Fill-in-the-blank with {{c1::text}} placeholders",
+    "reverse": "Can be reviewed in both directions (term→def and def→term)",
+    "type-in": "Requires typing exact answer (for syntax/commands)"
+  },
+
+  "difficulty_guide": {
+    "easy": "Recall/recognition level - definitions, simple facts",
+    "medium": "Application/comprehension - explaining, comparing",
+    "hard": "Analysis/synthesis - scenarios, debugging, design decisions"
+  },
+
+  "tag_categories": {
+    "content_type": ["terminology", "conceptual", "procedural", "strategic"],
+    "cognitive_level": ["recall", "application", "analysis", "synthesis"],
+    "topic": ["architecture", "patterns", "anti-patterns", "edge-cases"],
+    "lesson_structure": ["prerequisites", "connections", "key-takeaway", "summary"]
+  },
+
+  "study_recommendations": {
+    "new_cards_per_day": 10,
+    "review_cards_per_day": 50,
+    "learning_steps": [1, 10, 60, 480],
+    "graduating_interval": 3,
+    "easy_interval": 7,
+    "starting_ease": 2.5,
+    "spaced_repetition_algorithm": "SM-2 or Anki default"
+  },
+
+  "export_formats": {
+    "anki": {
+      "method": "Use scripts/export-flashcards-to-anki.py",
+      "format": ".apkg package",
+      "note_types": ["Basic", "Cloze"]
+    },
+    "csv": {
+      "columns": ["card_id", "front", "back", "tags", "difficulty"],
+      "delimiter": "tab"
+    },
+    "markdown": {
+      "format": "Q: {front}\nA: {back}\n---",
+      "use_case": "Manual review or printing"
+    }
+  }
+}

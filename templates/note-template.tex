@@ -1,0 +1,176 @@
+% LaTeX Template for Agent Factory Checkpoint Notes
+% Used by export-to-pdf.sh for PDF generation
+% Requires: xelatex, common LaTeX packages
+
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(papersize)$$papersize$paper,$endif$]{article}
+
+% Packages
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{enumitem}
+
+% Page geometry
+$if(geometry)$
+\geometry{$for(geometry)$$geometry$$sep$,$endfor$}
+$else$
+\geometry{margin=1in}
+$endif$
+
+% Colors
+\definecolor{primaryblue}{RGB}{74,144,226}
+\definecolor{accentcyan}{RGB}{80,227,194}
+\definecolor{darkgray}{RGB}{51,51,51}
+\definecolor{lightgray}{RGB}{240,240,240}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{linkblue}{RGB}{41,128,185}
+
+% Hyperlinks
+\hypersetup{
+  colorlinks=true,
+  linkcolor=primaryblue,
+  filecolor=primaryblue,
+  urlcolor=linkblue,
+  breaklinks=true,
+  pdfborder={0 0 0},
+  bookmarksdepth=section
+}
+
+% Listings (code blocks)
+\lstset{
+  basicstyle=\small\ttfamily,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  frameround=tttt,
+  rulecolor=\color{lightgray},
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=flexible,
+  keepspaces=true,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny\color{darkgray},
+  stepnumber=1,
+  tabsize=2
+}
+
+% Headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{darkgray}{$title$}}
+\fancyhead[R]{\small\textcolor{darkgray}{Lesson Notes}}
+\fancyfoot[C]{\small\textcolor{darkgray}{\thepage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Title formatting
+\titleformat{\section}
+  {\Large\bfseries\color{primaryblue}}
+  {\thesection}{1em}{}
+  [\vspace{-0.5em}\color{lightgray}\rule{\textwidth}{0.5pt}]
+
+\titleformat{\subsection}
+  {\large\bfseries\color{darkgray}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{darkgray}}
+  {\thesubsubsection}{1em}{}
+
+% Custom environments
+\newtcolorbox{definitionbox}{
+  colback=lightgray,
+  colframe=primaryblue,
+  boxrule=1pt,
+  arc=3pt,
+  left=10pt,
+  right=10pt,
+  top=8pt,
+  bottom=8pt
+}
+
+\newtcolorbox{examplebox}{
+  colback=white,
+  colframe=accentcyan,
+  boxrule=1pt,
+  arc=3pt,
+  left=10pt,
+  right=10pt,
+  top=8pt,
+  bottom=8pt
+}
+
+\newtcolorbox{warningbox}{
+  colback=yellow!10,
+  colframe=orange,
+  boxrule=1pt,
+  arc=3pt,
+  left=10pt,
+  right=10pt,
+  top=8pt,
+  bottom=8pt
+}
+
+% Table of contents
+\setcounter{tocdepth}{$if(toc-depth)$$toc-depth$$else$3$endif$}
+
+% Title
+$if(title)$
+\title{\LARGE\bfseries\color{primaryblue}$title$}
+$endif$
+
+$if(subtitle)$
+\providecommand{\subtitle}[1]{}
+\subtitle{\large\color{darkgray}$subtitle$}
+$endif$
+
+$if(author)$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$endif$
+
+$if(date)$
+\date{$date$}
+$else$
+\date{}
+$endif$
+
+% Document
+\begin{document}
+
+$if(title)$
+\maketitle
+$endif$
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$if(toc)$
+{
+\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+\clearpage
+}
+$endif$
+
+$body$
+
+\end{document}

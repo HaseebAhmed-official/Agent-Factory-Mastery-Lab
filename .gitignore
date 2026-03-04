@@ -1,0 +1,99 @@
+# Agent Factory Part 1 - Checkpoint System .gitignore
+# Created: 2026-03-03
+
+# === Temporary Files ===
+*.tmp
+*.tmp.*
+.checkpoint-meta.tmp.json
+*~
+.DS_Store
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+ENV/
+env/
+.venv
+
+# === Export Artifacts (Optional - user choice) ===
+# Uncomment these if you want to exclude exported files from git
+# exports/pdf/
+# exports/html/
+# exports/flashcards/*.apkg
+
+# === Logs and Validation ===
+*.log
+validation-errors.log
+export-*.log
+
+# === IDE and Editor Files ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.project
+.pydevproject
+.settings/
+
+# === OS Files ===
+Thumbs.db
+desktop.ini
+.Spotlight-V100
+.Trashes
+
+# === Git Hooks (Optional) ===
+# Keep hooks in repo for easy setup, but ignore local customizations
+# .git/hooks/pre-commit.local
+
+# === Migration Staging (Schema migrations) ===
+.migration-staging/
+
+# === Search Index Cache ===
+# Keep the actual index files but ignore cache/temp
+search-index/.cache/
+search-index/*.tmp
+
+# === Obsidian (Optional) ===
+# If using Obsidian, you might want to exclude its workspace files
+.obsidian/workspace
+.obsidian/workspace.json
+
+# === Node Modules (if adding any JS tooling) ===
+node_modules/
+package-lock.json
+yarn.lock
+
+# === Pandoc Temp Files ===
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
+*.synctex.gz
+
+# === Backup Files ===
+*.bak
+*.backup
+*-backup
+*.old

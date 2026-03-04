@@ -1,0 +1,520 @@
+/*
+ * Agent Factory Checkpoint Notes - HTML Export Stylesheet
+ * Used by export-to-html.sh for standalone HTML generation
+ * Professional, clean, readable design
+ */
+
+/* ============================================
+   1. RESET & BASE STYLES
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 3rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+  background: #fafafa;
+}
+
+/* ============================================
+   2. TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #1a1a1a;
+}
+
+h1 {
+  font-size: 2.75rem;
+  color: #4A90E2;
+  border-bottom: 3px solid #4A90E2;
+  padding-bottom: 0.75rem;
+  margin-top: 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #2c3e50;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  color: #34495e;
+}
+
+h4 {
+  font-size: 1.25rem;
+  color: #34495e;
+}
+
+h5 {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+h6 {
+  font-size: 1rem;
+  color: #666;
+  font-style: italic;
+}
+
+p {
+  margin-bottom: 1.25rem;
+}
+
+strong {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+em {
+  font-style: italic;
+  color: #555;
+}
+
+/* ============================================
+   3. LINKS
+   ============================================ */
+
+a {
+  color: #4A90E2;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: #2980b9;
+  border-bottom-color: #2980b9;
+}
+
+a:visited {
+  color: #8e44ad;
+}
+
+/* ============================================
+   4. CODE & PREFORMATTED TEXT
+   ============================================ */
+
+code {
+  background: #f5f5f5;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: "SF Mono", Monaco, Menlo, Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+  color: #e74c3c;
+  border: 1px solid #e0e0e0;
+}
+
+pre {
+  background: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-left: 4px solid #4A90E2;
+  border-radius: 5px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  color: #333;
+  font-size: 0.95em;
+}
+
+/* ============================================
+   5. LISTS
+   ============================================ */
+
+ul, ol {
+  margin: 1rem 0 1.5rem 2rem;
+  padding: 0;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+ul ul {
+  list-style-type: circle;
+  margin: 0.5rem 0 0.5rem 2rem;
+}
+
+ul ul ul {
+  list-style-type: square;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+ol ol {
+  list-style-type: lower-alpha;
+  margin: 0.5rem 0 0.5rem 2rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+li > p {
+  margin-bottom: 0.75rem;
+}
+
+/* ============================================
+   6. TABLES
+   ============================================ */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+thead {
+  background: linear-gradient(135deg, #4A90E2 0%, #50E3C2 100%);
+  color: white;
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border: none;
+}
+
+td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+tbody tr:hover {
+  background: #f0f8ff;
+  transition: background 0.2s ease;
+}
+
+/* ============================================
+   7. BLOCKQUOTES
+   ============================================ */
+
+blockquote {
+  border-left: 5px solid #4A90E2;
+  background: #f0f8ff;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 5px 5px 0;
+  color: #2c3e50;
+  font-style: italic;
+}
+
+blockquote p {
+  margin-bottom: 0.5rem;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+blockquote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.9em;
+  color: #666;
+  font-style: normal;
+}
+
+blockquote cite::before {
+  content: "— ";
+}
+
+/* ============================================
+   8. HORIZONTAL RULES
+   ============================================ */
+
+hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #4A90E2, transparent);
+  margin: 3rem 0;
+}
+
+/* ============================================
+   9. TABLE OF CONTENTS
+   ============================================ */
+
+#TOC {
+  background: white;
+  border: 2px solid #4A90E2;
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0 3rem 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+#TOC::before {
+  content: "📚 Table of Contents";
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #4A90E2;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+#TOC ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#TOC > ul {
+  padding-left: 0;
+}
+
+#TOC ul ul {
+  margin-left: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#TOC li {
+  margin-bottom: 0.75rem;
+}
+
+#TOC a {
+  color: #2c3e50;
+  border-bottom: 1px dotted transparent;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+#TOC a:hover {
+  color: #4A90E2;
+  border-bottom-color: #4A90E2;
+  padding-left: 0.5rem;
+}
+
+/* ============================================
+   10. IMAGES & FIGURES
+   ============================================ */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
+}
+
+/* ============================================
+   11. SPECIAL BOXES
+   ============================================ */
+
+.definition, .example, .warning, .note, .exercise {
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 5px;
+  border-left: 5px solid;
+}
+
+.definition {
+  background: #e8f4fd;
+  border-color: #4A90E2;
+}
+
+.definition::before {
+  content: "📘 Definition";
+  display: block;
+  font-weight: 600;
+  color: #4A90E2;
+  margin-bottom: 0.5rem;
+}
+
+.example {
+  background: #e6f9f7;
+  border-color: #50E3C2;
+}
+
+.example::before {
+  content: "💡 Example";
+  display: block;
+  font-weight: 600;
+  color: #1abc9c;
+  margin-bottom: 0.5rem;
+}
+
+.warning {
+  background: #fff3cd;
+  border-color: #ffc107;
+}
+
+.warning::before {
+  content: "⚠️ Warning";
+  display: block;
+  font-weight: 600;
+  color: #f39c12;
+  margin-bottom: 0.5rem;
+}
+
+.note {
+  background: #f0f0f0;
+  border-color: #95a5a6;
+}
+
+.note::before {
+  content: "📝 Note";
+  display: block;
+  font-weight: 600;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+}
+
+.exercise {
+  background: #fef5e7;
+  border-color: #f39c12;
+}
+
+.exercise::before {
+  content: "🎯 Exercise";
+  display: block;
+  font-weight: 600;
+  color: #d68910;
+  margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   12. PRINT STYLES
+   ============================================ */
+
+@media print {
+  body {
+    background: white;
+    max-width: none;
+    padding: 1rem;
+  }
+
+  #TOC {
+    border: 1px solid #ccc;
+    box-shadow: none;
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  pre {
+    page-break-inside: avoid;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+}
+
+/* ============================================
+   13. RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  #TOC {
+    padding: 1.5rem;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 0.75rem 1rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  pre {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: 0.5rem;
+  }
+}

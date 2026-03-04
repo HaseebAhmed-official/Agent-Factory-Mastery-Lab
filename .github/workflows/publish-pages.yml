@@ -1,0 +1,527 @@
+name: Publish to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'visual-presentations/**'
+      - 'revision-notes/**'
+      - 'quick-reference/**'
+      - 'context-bridge/**'
+      - '.github/workflows/publish-pages.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent concurrent deployments
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create site structure
+        run: |
+          mkdir -p _site
+          mkdir -p _site/presentations
+          mkdir -p _site/notes
+          mkdir -p _site/quick-ref
+          mkdir -p _site/assets
+
+      - name: Copy visual presentations
+        run: |
+          if [ -d "visual-presentations" ]; then
+            cp -r visual-presentations/* _site/presentations/ 2>/dev/null || true
+          fi
+
+      - name: Copy concept map
+        run: |
+          if [ -f "visual-presentations/concept-map.html" ]; then
+            cp visual-presentations/concept-map.html _site/concept-map.html
+          fi
+          if [ -f "visual-presentations/concept-map-data.json" ]; then
+            cp visual-presentations/concept-map-data.json _site/assets/
+          fi
+
+      - name: Convert notes to HTML
+        run: |
+          # Install pandoc if needed
+          if ! command -v pandoc &> /dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y pandoc
+          fi
+
+          # Find all markdown notes
+          find revision-notes -name "*.md" -type f | while read -r file; do
+            # Get relative path
+            rel_path="${file#revision-notes/}"
+            # Create output path
+            out_file="_site/notes/${rel_path%.md}.html"
+            # Create directory if needed
+            mkdir -p "$(dirname "$out_file")"
+
+            # Convert to HTML
+            pandoc "$file" \
+              --from markdown \
+              --to html5 \
+              --standalone \
+              --self-contained \
+              --toc \
+              --toc-depth=3 \
+              --highlight-style=tango \
+              --metadata title="$(basename "$file" .md)" \
+              --css=../../assets/style.css \
+              --output="$out_file" 2>/dev/null || echo "Failed: $file"
+          done
+
+      - name: Copy quick reference cheatsheets
+        run: |
+          if [ -d "quick-reference" ]; then
+            find quick-reference -name "*.md" -type f | while read -r file; do
+              rel_path="${file#quick-reference/}"
+              out_file="_site/quick-ref/${rel_path%.md}.html"
+              mkdir -p "$(dirname "$out_file")"
+
+              pandoc "$file" \
+                --from markdown \
+                --to html5 \
+                --standalone \
+                --self-contained \
+                --metadata title="$(basename "$file" .md)" \
+                --output="$out_file" 2>/dev/null || echo "Failed: $file"
+            done
+          fi
+
+      - name: Create index page
+        run: |
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Agent Factory Part 1 - Study Materials</title>
+            <style>
+              * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
+
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 2rem;
+              }
+
+              .container {
+                max-width: 1200px;
+                margin: 0 auto;
+              }
+
+              header {
+                text-align: center;
+                color: white;
+                margin-bottom: 3rem;
+              }
+
+              h1 {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+              }
+
+              .subtitle {
+                font-size: 1.25rem;
+                opacity: 0.9;
+              }
+
+              .card-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+                margin-bottom: 3rem;
+              }
+
+              .card {
+                background: white;
+                border-radius: 12px;
+                padding: 2rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                text-decoration: none;
+                color: inherit;
+                display: block;
+              }
+
+              .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+              }
+
+              .card-icon {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+              }
+
+              .card-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: #4A90E2;
+              }
+
+              .card-description {
+                color: #666;
+                line-height: 1.5;
+              }
+
+              .stats {
+                background: rgba(255,255,255,0.95);
+                border-radius: 12px;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+              }
+
+              .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+                text-align: center;
+              }
+
+              .stat {
+                padding: 1rem;
+              }
+
+              .stat-value {
+                font-size: 2.5rem;
+                font-weight: bold;
+                color: #4A90E2;
+              }
+
+              .stat-label {
+                color: #666;
+                margin-top: 0.5rem;
+              }
+
+              footer {
+                text-align: center;
+                color: white;
+                opacity: 0.8;
+                margin-top: 3rem;
+              }
+
+              .features {
+                background: rgba(255,255,255,0.95);
+                border-radius: 12px;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+              }
+
+              .features h2 {
+                margin-bottom: 1rem;
+                color: #4A90E2;
+              }
+
+              .features ul {
+                list-style: none;
+                padding-left: 0;
+              }
+
+              .features li {
+                padding: 0.5rem 0;
+                padding-left: 1.5rem;
+                position: relative;
+              }
+
+              .features li::before {
+                content: "✓";
+                position: absolute;
+                left: 0;
+                color: #50E3C2;
+                font-weight: bold;
+              }
+
+              @media (max-width: 768px) {
+                h1 {
+                  font-size: 2rem;
+                }
+
+                .card-grid {
+                  grid-template-columns: 1fr;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <header>
+                <h1>🎓 Agent Factory Part 1</h1>
+                <p class="subtitle">General Agents Foundations - Study Materials</p>
+              </header>
+
+              <div class="stats">
+                <div class="stats-grid">
+                  <div class="stat">
+                    <div class="stat-value" id="lesson-count">--</div>
+                    <div class="stat-label">Lessons</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value" id="checkpoint-count">--</div>
+                    <div class="stat-label">Checkpoints</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value" id="presentation-count">--</div>
+                    <div class="stat-label">Presentations</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-grid">
+                <a href="concept-map.html" class="card">
+                  <div class="card-icon">🗺️</div>
+                  <div class="card-title">Interactive Concept Map</div>
+                  <div class="card-description">
+                    Explore the knowledge graph. Navigate concepts visually, filter by lesson or tag.
+                  </div>
+                </a>
+
+                <a href="presentations/" class="card">
+                  <div class="card-icon">📽️</div>
+                  <div class="card-title">Visual Presentations</div>
+                  <div class="card-description">
+                    Slide-based interactive presentations for each lesson. Perfect for review.
+                  </div>
+                </a>
+
+                <a href="notes/" class="card">
+                  <div class="card-icon">📚</div>
+                  <div class="card-title">Checkpoint Notes</div>
+                  <div class="card-description">
+                    Comprehensive revision notes organized by chapter, lesson, and depth layer.
+                  </div>
+                </a>
+
+                <a href="quick-ref/" class="card">
+                  <div class="card-icon">⚡</div>
+                  <div class="card-title">Quick Reference</div>
+                  <div class="card-description">
+                    2-3 page cheatsheets for rapid review. Print-friendly study guides.
+                  </div>
+                </a>
+              </div>
+
+              <div class="features">
+                <h2>Features</h2>
+                <ul>
+                  <li>Comprehensive notes following TEACH pedagogy (Terminology, Explain, Analogize, Check, Hands-On)</li>
+                  <li>Progressive depth layers: L1 (Fundamentals) → L2 (Intermediate) → L3 (Advanced)</li>
+                  <li>Interactive visualizations with concept maps and slide presentations</li>
+                  <li>Quick reference cheatsheets for exam prep and review</li>
+                  <li>Failure analysis with "What Goes Wrong" framework for every concept</li>
+                  <li>Hands-on exercises and comprehension checks</li>
+                  <li>Fully searchable and linkable content</li>
+                  <li>Mobile-responsive design for study on any device</li>
+                </ul>
+              </div>
+
+              <footer>
+                <p>Generated with ❤️ by Professor Agent</p>
+                <p>Agent Factory Part 1: General Agents Foundations (AIAF-2026)</p>
+                <p><a href="https://agentfactory.panaversity.org" style="color: white;">Official Panaversity Curriculum</a></p>
+              </footer>
+            </div>
+
+            <script>
+              // Count files and update stats
+              async function updateStats() {
+                try {
+                  // Count presentations
+                  const presentationResp = await fetch('presentations/');
+                  const presentationHTML = await presentationResp.text();
+                  const presentationMatches = presentationHTML.match(/\.html/g) || [];
+                  document.getElementById('presentation-count').textContent = presentationMatches.length;
+
+                  // Count notes
+                  const notesResp = await fetch('notes/');
+                  const notesHTML = await notesResp.text();
+                  const notesMatches = notesHTML.match(/\.html/g) || [];
+                  document.getElementById('checkpoint-count').textContent = notesMatches.length;
+
+                  // Estimate lessons (presentations / 3 avg checkpoints per lesson)
+                  const lessonEstimate = Math.ceil(presentationMatches.length / 3);
+                  document.getElementById('lesson-count').textContent = lessonEstimate;
+                } catch (e) {
+                  // Fallback to placeholder
+                  document.getElementById('lesson-count').textContent = '5+';
+                  document.getElementById('checkpoint-count').textContent = '15+';
+                  document.getElementById('presentation-count').textContent = '10+';
+                }
+              }
+
+              updateStats();
+            </script>
+          </body>
+          </html>
+          EOF
+
+      - name: Create presentations index
+        run: |
+          cat > _site/presentations/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Visual Presentations - Agent Factory</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                max-width: 1000px;
+                margin: 2rem auto;
+                padding: 0 2rem;
+                background: #f5f5f5;
+              }
+              h1 { color: #4A90E2; }
+              .presentation-list {
+                display: grid;
+                gap: 1rem;
+                margin-top: 2rem;
+              }
+              .presentation-item {
+                background: white;
+                padding: 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                text-decoration: none;
+                color: inherit;
+                transition: transform 0.2s;
+              }
+              .presentation-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+              }
+              .presentation-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: #4A90E2;
+                margin-bottom: 0.5rem;
+              }
+              .back-link {
+                display: inline-block;
+                margin-bottom: 2rem;
+                color: #4A90E2;
+                text-decoration: none;
+              }
+            </style>
+          </head>
+          <body>
+            <a href="../" class="back-link">← Back to Home</a>
+            <h1>📽️ Visual Presentations</h1>
+            <p>Interactive slide-based presentations for each lesson</p>
+            <div class="presentation-list" id="presentation-list">
+              <p>Loading presentations...</p>
+            </div>
+            <script>
+              // Auto-discover presentations
+              const files = [
+                // Will be populated by directory listing or generated dynamically
+              ];
+
+              const listEl = document.getElementById('presentation-list');
+              if (files.length === 0) {
+                listEl.innerHTML = '<p>No presentations found. Run Finish command to generate.</p>';
+              } else {
+                listEl.innerHTML = files.map(file =>
+                  `<a href="${file}" class="presentation-item">
+                    <div class="presentation-title">${file.replace('.html', '').replace(/-/g, ' ')}</div>
+                   </a>`
+                ).join('');
+              }
+            </script>
+          </body>
+          </html>
+          EOF
+
+      - name: Create notes index
+        run: |
+          cat > _site/notes/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Checkpoint Notes - Agent Factory</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                max-width: 1000px;
+                margin: 2rem auto;
+                padding: 0 2rem;
+                background: #f5f5f5;
+              }
+              h1 { color: #4A90E2; }
+              .back-link {
+                display: inline-block;
+                margin-bottom: 2rem;
+                color: #4A90E2;
+                text-decoration: none;
+              }
+              .note-tree {
+                background: white;
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                margin-top: 2rem;
+              }
+            </style>
+          </head>
+          <body>
+            <a href="../" class="back-link">← Back to Home</a>
+            <h1>📚 Checkpoint Notes</h1>
+            <p>Comprehensive revision notes organized by chapter, lesson, and depth layer</p>
+            <div class="note-tree">
+              <p>Browse the directory tree to find notes, or use the search in the top navigation.</p>
+            </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
