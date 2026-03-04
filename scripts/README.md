@@ -353,6 +353,6 @@ Planned for future phases:
 
 ## See Also
 
-- [CHECKPOINT-SYSTEM-README.md](../CHECKPOINT-SYSTEM-README.md) - Checkpoint system overview
-- [IMPLEMENTATION-PROGRESS.md](../IMPLEMENTATION-PROGRESS.md) - Implementation phases
+- [guide/CHECKPOINT-SYSTEM-README.md](../guide/CHECKPOINT-SYSTEM-README.md) - Checkpoint system overview
+- [dev-docs/IMPLEMENTATION-PROGRESS.md](../dev-docs/IMPLEMENTATION-PROGRESS.md) - Implementation phases
 - [Knowledge_Vault/Protocols/finish-synthesis.md](../Knowledge_Vault/Protocols/finish-synthesis.md) - Finish protocol

@@ -42,7 +42,7 @@ Each deck contains:
       "back": "A callback function registered to execute at specific lifecycle points.",
       "tags": ["3.1", "hooks", "vocabulary", "fundamentals"],
       "difficulty": "easy",
-      "source": "revision-notes/.../3.1-L1-hook-architecture.md#vocabulary",
+      "source": "revision-notes/3.1-L1-hook-architecture.md#vocabulary",
       "layer": "L1"
     },
     {
@@ -52,7 +52,7 @@ Each deck contains:
       "back": "Observe → Orient → Decide → Act. Applied to hook lifecycle management.",
       "tags": ["3.1", "frameworks", "OODA", "intermediate"],
       "difficulty": "medium",
-      "source": "revision-notes/.../3.1-L1-hook-architecture.md#frameworks",
+      "source": "revision-notes/3.1-L1-hook-architecture.md#frameworks",
       "layer": "L1"
     }
   ],

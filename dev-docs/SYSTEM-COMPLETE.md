@@ -181,7 +181,7 @@ The **Agent Factory Part 1 Checkpoint System** is now fully implemented with:
 - `checkpoint-part-template.md` (boilerplate)
 - `quick-reference-template.md` (cheatsheet)
 - `flashcard-template.json` (schema)
-- `OBSIDIAN-GUIDE.md` (800 lines)
+- `guide/OBSIDIAN-GUIDE.md` (800 lines)
 - `GITHUB-PAGES-SETUP.md` (450 lines)
 - `publish-pages.yml` (GitHub Actions workflow)
 
@@ -204,7 +204,7 @@ The **Agent Factory Part 1 Checkpoint System** is now fully implemented with:
 - `.git/hooks/pre-commit` (quality gate)
 - `scripts/git-auto-push.py` (auto-commit/push)
 - `.gitignore` (comprehensive patterns)
-- `GIT-INTEGRATION-GUIDE.md` (900+ lines)
+- `guide/GIT-INTEGRATION-GUIDE.md` (900+ lines)
 - Updated `checkpoint-synthesis.md` (Stage 6)
 - Updated `finish-synthesis.md` (Stage 9)
 
@@ -296,9 +296,9 @@ Agent-Factory-Part-1-test-prep/
 │
 ├── CLAUDE.md (main instructions)
 ├── CHECKPOINT-SYSTEM-README.md (user guide)
-├── OBSIDIAN-GUIDE.md (800 lines)
+├── guide/OBSIDIAN-GUIDE.md (800 lines)
 ├── GITHUB-PAGES-SETUP.md (450 lines)
-├── GIT-INTEGRATION-GUIDE.md (900+ lines) ← NEW
+├── guide/GIT-INTEGRATION-GUIDE.md (900+ lines) ← NEW
 ├── IMPLEMENTATION-PROGRESS.md (this project's tracker)
 ├── PHASE-3-COMPLETE.md
 ├── PHASE-4-COMPLETE.md
@@ -447,7 +447,7 @@ Files created:
 # Export to Anki
 python3 scripts/export-flashcards-to-anki.py flashcards/lesson-3.1-deck.json
 
-# Import to Obsidian (see OBSIDIAN-GUIDE.md)
+# Import to Obsidian (see guide/OBSIDIAN-GUIDE.md)
 # Deploy to web (automatic via GitHub Pages)
 ```
 
@@ -504,9 +504,9 @@ python3 scripts/export-flashcards-to-anki.py --merge \
 |----------|---------|-------|
 | **CLAUDE.md** | Main instructions, pedagogy, protocols | 500+ |
 | **CHECKPOINT-SYSTEM-README.md** | User guide, commands, workflows | 600+ |
-| **OBSIDIAN-GUIDE.md** | Obsidian integration setup | 800 |
+| **guide/OBSIDIAN-GUIDE.md** | Obsidian integration setup | 800 |
 | **GITHUB-PAGES-SETUP.md** | GitHub Pages deployment | 450 |
-| **GIT-INTEGRATION-GUIDE.md** | Git auto-commit, quality gates | 900+ |
+| **guide/GIT-INTEGRATION-GUIDE.md** | Git auto-commit, quality gates | 900+ |
 | **IMPLEMENTATION-PROGRESS.md** | Development tracker | 400+ |
 | **PHASE-3-COMPLETE.md** | Commands summary | 450+ |
 | **PHASE-4-COMPLETE.md** | Integration summary | 450+ |
@@ -581,9 +581,9 @@ The system is **100% production-ready**. The following are optional enhancements
 ### Documentation
 
 - Read `CHECKPOINT-SYSTEM-README.md` for user guide
-- Read `OBSIDIAN-GUIDE.md` for Obsidian setup
+- Read `guide/OBSIDIAN-GUIDE.md` for Obsidian setup
 - Read `GITHUB-PAGES-SETUP.md` for web deployment
-- Read `GIT-INTEGRATION-GUIDE.md` for git workflows
+- Read `guide/GIT-INTEGRATION-GUIDE.md` for git workflows
 
 ### Testing
 
@@ -594,8 +594,8 @@ The system is **100% production-ready**. The following are optional enhancements
 
 ### Troubleshooting
 
-- Check `GIT-INTEGRATION-GUIDE.md` → Troubleshooting section
-- Check `OBSIDIAN-GUIDE.md` → Common Issues section
+- Check `guide/GIT-INTEGRATION-GUIDE.md` → Troubleshooting section
+- Check `guide/OBSIDIAN-GUIDE.md` → Common Issues section
 - Check `GITHUB-PAGES-SETUP.md` → Troubleshooting section
 - Run validation: `./scripts/validate-notes.sh <lesson>`
 

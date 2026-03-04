@@ -686,11 +686,11 @@ Professor Agent will:
 
 **Documentation**:
 
-- `SYSTEM-COMPLETE.md` - Full system overview
-- `GIT-INTEGRATION-GUIDE.md` - Git setup and usage
-- `PHASE-5-EXTENSIONS-GUIDE.md` - Migration & analytics
-- `OBSIDIAN-GUIDE.md` - Obsidian integration
-- `GITHUB-PAGES-SETUP.md` - Web deployment
+- `../dev-docs/SYSTEM-COMPLETE.md` - Full system overview
+- `GIT-INTEGRATION-GUIDE.md` - Git setup and usage (in this guide directory)
+- `PHASE-5-EXTENSIONS-GUIDE.md` - Migration & analytics (in this guide directory)
+- `OBSIDIAN-GUIDE.md` - Obsidian integration (in this guide directory)
+- `GITHUB-PAGES-SETUP.md` - Web deployment (in this guide directory)
 
 ---
 

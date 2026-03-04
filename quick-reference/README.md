@@ -105,7 +105,7 @@ agent.registerHook('lifecycle', callback)
 ```
 
 ## Where to Learn More
-- Full notes: `revision-notes/.../3.1-L*-*.md`
+- Full notes: `revision-notes/3.1-L*-*.md`
 - Visual: `visual-presentations/session-NN-lesson-3.1-*.html`
 ```
 

@@ -609,7 +609,7 @@ find revision-notes -name "*.md" -type f
 
 **Count checkpoints**:
 ```bash
-ls revision-notes/ch3-*/module*/*/*.md | wc -l
+ls revision-notes/*.md | wc -l
 ```
 
 ### 3. Curriculum Manifest

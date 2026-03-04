@@ -168,7 +168,7 @@
 - ✅ Test import to Obsidian
 - ✅ Configure frontmatter for Obsidian
 - ✅ Create Obsidian graph view instructions
-- ✅ Create `OBSIDIAN-GUIDE.md` (800 lines, comprehensive)
+- ✅ Create `guide/OBSIDIAN-GUIDE.md` (800 lines, comprehensive)
 
 #### GitHub Pages Auto-Publish
 - ✅ Create `.github/workflows/publish-pages.yml`
@@ -211,7 +211,7 @@
 9. ✅ `templates/quick-reference-template.md` (400 lines)
 10. ✅ `templates/flashcard-template.json` (300 lines)
 11. ✅ `.github/workflows/publish-pages.yml` (350 lines)
-12. ✅ `OBSIDIAN-GUIDE.md` (800 lines)
+12. ✅ `guide/OBSIDIAN-GUIDE.md` (800 lines)
 13. ✅ `GITHUB-PAGES-SETUP.md` (450 lines)
 
 ---
@@ -230,7 +230,7 @@
 - ✅ Update checkpoint-synthesis.md with Stage 6 (git integration)
 - ✅ Update finish-synthesis.md with Stage 9 (git integration + tagging)
 - ✅ Create `.gitignore` with checkpoint patterns
-- ✅ Create `GIT-INTEGRATION-GUIDE.md` (comprehensive documentation)
+- ✅ Create `guide/GIT-INTEGRATION-GUIDE.md` (comprehensive documentation)
 
 #### Validation Scripts (Note: validate-notes.sh created in Phase 4)
 - ✅ Pre-commit hook uses existing `scripts/validate-notes.sh`
@@ -241,7 +241,7 @@
 1. ✅ `.git/hooks/pre-commit` (370 lines, quality gate)
 2. ✅ `scripts/git-auto-push.py` (500+ lines, Python script)
 3. ✅ `.gitignore` (comprehensive patterns)
-4. ✅ `GIT-INTEGRATION-GUIDE.md` (900+ lines, complete guide)
+4. ✅ `guide/GIT-INTEGRATION-GUIDE.md` (900+ lines, complete guide)
 5. ✅ Updated `Knowledge_Vault/Protocols/checkpoint-synthesis.md` (added Stage 6)
 6. ✅ Updated `Knowledge_Vault/Protocols/finish-synthesis.md` (added Stage 9)
 
@@ -282,7 +282,7 @@
 1. ✅ `scripts/migrate-schema.py` (600+ lines, executable)
 2. ✅ `scripts/validate-migration.py` (500+ lines, executable)
 3. ✅ `scripts/analytics-dashboard.py` (500+ lines, executable)
-4. ✅ `PHASE-5-EXTENSIONS-GUIDE.md` (comprehensive documentation, 800+ lines)
+4. ✅ `guide/PHASE-5-EXTENSIONS-GUIDE.md` (comprehensive documentation, 800+ lines)
 
 ---
 
@@ -298,7 +298,7 @@
 - ✅ Auto-tagging on lesson completion
 - ✅ Semantic commit messages (Conventional Commits)
 - ✅ Integration with checkpoint/finish protocols
-- ✅ Comprehensive documentation (GIT-INTEGRATION-GUIDE.md)
+- ✅ Comprehensive documentation (guide/GIT-INTEGRATION-GUIDE.md)
 
 ### Optional Extensions (Future)
 
@@ -325,7 +325,7 @@
 - Created migrate-schema.py (600+ lines, v1→v2 migration)
 - Created validate-migration.py (500+ lines, zero data loss validation)
 - Created analytics-dashboard.py (500+ lines, progress tracking)
-- Created PHASE-5-EXTENSIONS-GUIDE.md (800+ lines, comprehensive docs)
+- Created guide/PHASE-5-EXTENSIONS-GUIDE.md (800+ lines, comprehensive docs)
 - All 4 files created and tested
 
 **Phase 5 COMPLETE**: Both core git integration AND optional extensions finished!
@@ -373,7 +373,7 @@ Agent-Factory-Part-1-test-prep/
 ├── visual-presentations/ (concept-map.html + concept-map-data.json)
 ├── curriculum-manifest.json (template)
 ├── CHECKPOINT-SYSTEM-README.md (comprehensive guide)
-├── OBSIDIAN-GUIDE.md (800 lines, integration guide)
+├── guide/OBSIDIAN-GUIDE.md (800 lines, integration guide)
 ├── GITHUB-PAGES-SETUP.md (450 lines, deployment guide)
 ├── IMPLEMENTATION-PROGRESS.md (this file)
 ├── PHASE-3-COMPLETE.md (Phase 3 summary)
@@ -410,7 +410,7 @@ Agent-Factory-Part-1-test-prep/
 
 1. **Read documentation**:
    - `CHECKPOINT-SYSTEM-README.md` - Complete system guide
-   - `OBSIDIAN-GUIDE.md` - Obsidian integration
+   - `guide/OBSIDIAN-GUIDE.md` - Obsidian integration
    - `GITHUB-PAGES-SETUP.md` - Web deployment
 
 2. **Install dependencies**:

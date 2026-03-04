@@ -222,7 +222,7 @@ Follows [Conventional Commits](https://www.conventionalcommits.org/) specificati
 └─────────────────────────────────────────────────────────┘
 
 ℹ Found checkpoint files to validate:
-  - revision-notes/ch3-general-agents/module3/3.1-origin-story/3.1-L1-hook-architecture.md
+  - revision-notes/3.1-L1-hook-architecture.md
 
 ℹ Validating lesson 3.1...
 ✓ Lesson 3.1 passed (score: 87/100)
@@ -671,7 +671,7 @@ mv scripts/git-auto-push.py scripts/git-auto-push.py.disabled
 # ... teaching session ...
 
 # Manually commit
-git add revision-notes/ch3-general-agents/module3/3.1-*/
+git add revision-notes/3.1-*
 git commit -m "docs(checkpoint): lesson 3.1 layer L1"
 
 # Re-enable auto-push
@@ -872,7 +872,7 @@ The Git Integration system provides:
 2. Test with dry-run
 3. Start learning with automatic commits
 4. Deploy to GitHub Pages (see GITHUB-PAGES-SETUP.md)
-5. Import to Obsidian (see OBSIDIAN-GUIDE.md)
+5. Import to Obsidian (see OBSIDIAN-GUIDE.md in guide directory)
 
 ---
 

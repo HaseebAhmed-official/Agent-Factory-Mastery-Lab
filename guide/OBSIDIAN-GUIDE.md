@@ -109,7 +109,7 @@ Obsidian will automatically parse YAML frontmatter. No configuration needed!
 
 #### Filter 1: Chapter View
 ```
-path:revision-notes/ch3-*
+path:revision-notes/3.*
 tag:#chapter-3
 ```
 
@@ -433,7 +433,7 @@ Use in notes:
 tag:#hooks tag:#architecture
 
 # Search in specific folder
-path:revision-notes/ch3-*
+path:revision-notes/3.*
 
 # Combine conditions
 file:3.1 tag:#fundamentals

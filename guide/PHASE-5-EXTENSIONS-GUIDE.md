@@ -632,7 +632,7 @@ Completed: 0
 
 2. **Verify YAML frontmatter**:
    ```bash
-   head -20 revision-notes/ch3-*/module3/3.1-*/3.1-L1-*.md
+   head -20 revision-notes/3.1-L1-*.md
    # Should start with: ---
    ```
 

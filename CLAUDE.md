@@ -195,7 +195,7 @@ The checkpoint and finish workflows automatically integrate with version control
 - **Auto-commit on Checkpoint**: After Stage 6, if git is configured, checkpoint files are committed with semantic messages
 - **Auto-tag on Finish**: After Stage 9, lesson completion creates a git tag (`lesson-{X.Y}`) and pushes to remote
 - **Quality validation**: Pre-commit hooks validate checkpoint quality before allowing commits (70/100 minimum)
-- **See**: `GIT-INTEGRATION-GUIDE.md` for setup and usage
+- **See**: `guide/GIT-INTEGRATION-GUIDE.md` for setup and usage
 
 ### Schema Migration (Optional)
 
@@ -203,7 +203,7 @@ Upgrade checkpoint file schemas safely:
 - **v1 → v2 migration**: Adds learning objectives, mastery tracking, review counts
 - **Zero data loss validation**: Automatic backup and rollback capability
 - **Usage**: `python3 scripts/migrate-schema.py --version v2 --execute`
-- **See**: `PHASE-5-EXTENSIONS-GUIDE.md` for details
+- **See**: `guide/PHASE-5-EXTENSIONS-GUIDE.md` for details
 
 ### Analytics Dashboard (Optional)
 
@@ -212,4 +212,4 @@ Track learning progress and performance:
 - **Streak tracking**: Current and longest consecutive study days
 - **HTML export**: Beautiful responsive dashboard
 - **Usage**: `python3 scripts/analytics-dashboard.py`
-- **See**: `PHASE-5-EXTENSIONS-GUIDE.md` for details
+- **See**: `guide/PHASE-5-EXTENSIONS-GUIDE.md` for details
