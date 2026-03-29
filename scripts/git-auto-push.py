@@ -112,6 +112,9 @@ def get_git_context() -> dict:
 # Determine repo root dynamically (handles worktrees)
 _GIT_CONTEXT = get_git_context()
 REPO_ROOT = _GIT_CONTEXT["repo_root"]
+# Git operations (add, commit, push) must run from the working tree where
+# files actually live — for worktrees this differs from repo_root.
+WORK_ROOT = _GIT_CONTEXT["worktree_root"]
 DEFAULT_REMOTE = "origin"
 DEFAULT_BRANCH = "main"
 TAG_PREFIX = "lesson-"
@@ -158,12 +161,17 @@ def print_info(text: str):
     print(f"{Colors.BLUE}ℹ{Colors.NC} {text}")
 
 def run_command(cmd: List[str], capture_output: bool = True, check: bool = True) -> subprocess.CompletedProcess:
-    """Run shell command safely"""
+    """Run shell command safely from the active working tree root.
+
+    Uses WORK_ROOT (worktree root) rather than REPO_ROOT so that git add/commit/push
+    operate on the files in the current working tree. In a worktree these differ:
+    REPO_ROOT is the main repo, WORK_ROOT is the worktree where files live.
+    """
     try:
         if capture_output:
-            result = subprocess.run(cmd, capture_output=True, text=True, check=check, cwd=REPO_ROOT)
+            result = subprocess.run(cmd, capture_output=True, text=True, check=check, cwd=str(WORK_ROOT))
         else:
-            result = subprocess.run(cmd, check=check, cwd=REPO_ROOT)
+            result = subprocess.run(cmd, check=check, cwd=str(WORK_ROOT))
         return result
     except subprocess.CalledProcessError as e:
         print_error(f"Command failed: {' '.join(cmd)}")
