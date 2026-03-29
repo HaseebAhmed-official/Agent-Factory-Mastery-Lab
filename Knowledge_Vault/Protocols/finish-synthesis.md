@@ -52,7 +52,7 @@ Create final versioned part: `{X.Y}-L{N}-{concept}.md`
 
 ## STAGE 3: Final Bridge Update (Tier 1)
 
-**File**: `context-bridge/session-{NN}-cumulative.md`
+**File**: `context-bridge/master-cumulative.md`
 
 **Update mode**: Final updates + lesson completion marker
 
@@ -484,7 +484,7 @@ visual-presentations/
         <div class="step">
           <div class="step-number">1</div>
           <p>Load cumulative context bridge for continuity</p>
-          <code>context-bridge/session-{NN}-cumulative.md</code>
+          <code>context-bridge/master-cumulative.md</code>
         </div>
 
         <div class="step">
@@ -1039,7 +1039,7 @@ After all files written successfully:
   - {X.Y}-L{N}-{concept}.md
 
 🌉 Context Bridge (updated):
-  - context-bridge/session-{NN}-cumulative.md
+  - context-bridge/master-cumulative.md
 
 🎨 Visual Presentations:
   - session-{NN}-lesson-{X.Y}-{title}.html (master navigation)

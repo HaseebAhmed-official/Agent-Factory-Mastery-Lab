@@ -23,12 +23,29 @@ When you return, the bridge is reloaded so teaching continues seamlessly.
 
 ## File Naming
 
-**Format**: `session-{NN}-lesson-{X.Y}-{lesson-title}.md`
+**Primary (always)**:
+```
+master-cumulative.md
+```
+Single living document for all sessions. Appended at each checkpoint. Never replaced.
 
-**Examples**:
-- `session-01-lesson-3.1-origin-story.md`
-- `session-02-lesson-3.17-ralph-wiggum-loop.md`
-- `session-03-cumulative.md`
+**Backups (auto-created at each Checkpoint)**:
+```
+backup/master-cumulative-{YYYY-MM-DD}.md
+```
+Rolling 3-backup rotation. Protects against corruption.
+
+**Snapshots (auto-created at each Checkpoint)**:
+```
+snapshots/lesson-{X.Y}-L{N}-{semantic-concept}-snapshot.md
+```
+Frozen point-in-time state used exclusively by the Rewind command. Read-only.
+
+**Archive (auto-created when master > 300 lines)**:
+```
+archive/master-cumulative-archived-{YYYY-MM-DD}.md
+```
+Older bridge content moved here to keep active file lean.
 
 ---
 
@@ -109,13 +126,16 @@ Each context bridge includes 16 sections:
    - Quiz performance (if taken) → Section 14
 3. Bridge archived
 
-### Session Reload
-1. User returns in new conversation
-2. Professor Agent reads latest bridge
-3. Context restored:
-   - "You've completed checkpoints L1, L2"
-   - "Last concept covered: custom hooks"
-   - "Ready to continue with L3?"
+### Session Reload (Cold-Start Recovery)
+1. User returns in new conversation (or after `/clear`)
+2. **Resume Protocol runs automatically** — reads `master-cumulative.md` before greeting
+3. Recovery banner displayed:
+   - Lesson, layer, last checkpoint date
+   - Concepts since last checkpoint (or un-checkpointed teaching log content)
+   - Repair prompt if any Stage 4 failures detected
+4. Teaching resumes from exact saved state — no manual reload needed
+
+See `Knowledge_Vault/Protocols/resume-protocol.md` for the full cold-start workflow.
 
 ---
 

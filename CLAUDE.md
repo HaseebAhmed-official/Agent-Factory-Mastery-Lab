@@ -29,6 +29,7 @@ Follow the **TEACH cycle** for every concept without exception:
 
 | Trigger | Fetch |
 |---------|-------|
+| **Session start (every conversation)** | `Knowledge_Vault/Protocols/resume-protocol.md` |
 | Lesson delivery or curriculum navigation | `Knowledge_Vault/Curriculum/chapter-{N}-*.md` |
 | Teaching methodology or format questions | `Knowledge_Vault/Pedagogy/*.md` |
 | Term definitions or glossary lookups | `Knowledge_Vault/Vocabulary/*.md` |
@@ -37,10 +38,28 @@ Follow the **TEACH cycle** for every concept without exception:
 | Student calibration or profile reference | `Knowledge_Vault/Student/profile.md` |
 | Behavioral rules verification | `Knowledge_Vault/Capabilities/rules-and-constraints.md` |
 | User says **"End"** | `Knowledge_Vault/Protocols/end-of-session-synthesis.md` |
+| User says **"Verify"** or asks about curriculum coverage gaps | `Knowledge_Vault/Protocols/verify-coverage.md` |
+| User says **"Resume"** or **"Repair"** | `Knowledge_Vault/Protocols/resume-protocol.md` |
 
 ## STUDENT CONTEXT (SUMMARY)
 
 Intermediate learner. Used ChatGPT/Claude conversationally. New to agentic AI and Agent Factory. Wants deep understanding + practical ability. Aspires to be a problem solver, strategic thinker, orchestrator. Needs slow pace, jargon pre-defined, concrete examples.
+
+## SESSION START — COLD-START RECOVERY PROTOCOL
+
+**RUNS BEFORE ANYTHING ELSE on every new conversation (including after `/clear`).**
+
+1. Check for `context-bridge/master-cumulative.md`
+2. If found: Execute `Knowledge_Vault/Protocols/resume-protocol.md` silently
+   - Display recovery banner with lesson/layer/last-checkpoint state
+   - Surface any un-checkpointed teaching log content (offer recovery)
+   - Surface any repair needs (⚠️ bridge rows or orphaned .tmp files)
+   - If lesson mismatch detected: ask before loading
+3. If not found: Proceed to SESSION PROTOCOL below (fresh start)
+
+**Do NOT greet until cold-start check is complete.**
+
+---
 
 ## SESSION PROTOCOL
 
@@ -50,7 +69,7 @@ Intermediate learner. Used ChatGPT/Claude conversationally. New to agentic AI an
 4. **Probe** using six question types: Explain-Back, Application, Failure Analysis, Compare-Contrast, Edge Case, Strategic
 5. **Complete** with Lesson Summary + Connection Map + readiness check
 
-**Begin every new conversation by greeting the student and asking where they would like to start.**
+**Begin every new conversation by running the Cold-Start Recovery Protocol first, THEN greeting the student.**
 
 ## MULTI-CHECKPOINT PROTOCOL
 
@@ -61,29 +80,35 @@ The checkpoint system provides flexible progress saving at semantic boundaries:
 - **`Checkpoint`** — Save progress after major concept, clear context, resume fresh
 - **`Finish`** — Complete lesson with comprehensive HTML presentation covering all checkpoints
 - **`Rewind`** — Rollback to previous checkpoint, explore alternative teaching paths
+- **`Verify`** — Compare checkpoint notes to curriculum URL, generate coverage report
+- **`Resume`** — Load master bridge and continue from last checkpoint
+- **`Repair`** — Fix incomplete checkpoint metadata from Stage 4 failures
 
 ### Checkpoint Workflow
 
-**Trigger**: User types `Checkpoint`
+**Trigger**: User types `Checkpoint` (case-insensitive; also: "Save progress", "Quick checkpoint")
+**NOT triggered by**: Questions containing the word (e.g., "What is a checkpoint?")
 
-1. Execute two-tier synthesis (fetch `Knowledge_Vault/Protocols/checkpoint-synthesis.md`)
-2. Create versioned part file: `{X.Y}-L{depth}-{semantic-concept}.md` where depth = L1 (fundamentals), L2 (intermediate), L3 (advanced)
-3. Update cumulative context bridge (append new content to `context-bridge/session-{NN}-cumulative.md`)
-4. Update checkpoint metadata JSON (`.checkpoint-meta.json` in lesson directory)
-5. Auto-reload from cumulative bridge
-6. Confirm: "Checkpoint L{depth} complete. Resuming from {last concept taught}..."
-7. **Continue teaching** — Do NOT end session, resume with next concept
+1. Execute full synthesis (fetch `Knowledge_Vault/Protocols/checkpoint-synthesis.md`)
+2. Create versioned part file: `{X.Y}-L{depth}-{semantic-concept}.md`
+   - Layer assigned by deterministic rules (L1→L2→L3→L4+), NOT subjective judgment
+3. Update master bridge (`context-bridge/master-cumulative.md`) — create dated backup first
+4. Write frozen snapshot to `context-bridge/snapshots/lesson-{X.Y}-L{depth}-{concept}-snapshot.md`
+5. Update checkpoint metadata JSON with 3-attempt retry
+6. Auto-reload from master bridge (truncate teaching-log-current.md)
+7. Confirm: "Checkpoint L{depth} complete. Resuming from {last concept taught}..."
+8. **Continue teaching** — Do NOT end session, resume with next concept
 
 **File Naming**: `{X.Y}-L{depth}-{semantic-concept}.md`
 - Examples: `3.1-L1-hook-architecture.md`, `3.17-L2-orchestration-patterns.md`
-- Depth layers: L1 (fundamentals) → L2 (intermediate) → L3 (advanced)
-- Semantic concept: Kebab-case primary concept name
+- Depth layers: L1 (fundamentals) → L2 (intermediate) → L3+ (advanced, no cap)
+- Semantic concept: Kebab-case primary concept name, max 50 chars
 
 **Proactive Suggestions**: Suggest checkpoints when readiness signals detected (defined in `Knowledge_Vault/Frameworks/checkpoint-readiness-signals.md`):
 - TEACH cycle complete for major concept
 - Natural curriculum boundary reached
 - Depth layer transition (L1→L2 or L2→L3)
-- Context window approaching 60% full
+- 25+ message exchanges since last checkpoint (replaces unreliable context window estimate)
 
 ### Finish Workflow
 
@@ -124,23 +149,47 @@ The checkpoint system provides flexible progress saving at semantic boundaries:
 
 ### Cumulative Context Bridge
 
-**File**: `context-bridge/session-{NN}-cumulative.md`
+**File**: `context-bridge/master-cumulative.md`
 
-**Purpose**: ONE living bridge document updated with each checkpoint (not separate bridges per checkpoint)
+**Purpose**: ONE living document for ALL sessions — never replaced, only appended. Backed up before each write.
 
-**New Sections**:
+**Structure** (18 sections):
+- Sections 1-16: Learning progress, vocab, checkpoints, state (standard)
+- Section 17: Session History — rows appended per session (replaces session numbering)
+- Section 18: Backup Log — auto-populated by each checkpoint
+
+**Status markers in Section 14 (Checkpoint History)**:
+- `⏳ Saving...` — checkpoint in progress
+- `✓ Archived` — successfully saved
+- `⚠️ Meta failed — repair needed` — Stage 4 failed, Resume Protocol will offer repair
+
+**Sections template**:
 ```markdown
-## 15. Checkpoint History
+## 14. Checkpoint History
 | Layer | Timestamp | Concepts Covered | File | Status |
 |-------|-----------|------------------|------|--------|
-| L1 | 2026-03-03 14:32 | Hook System, Lifecycle | 3.1-L1-hook-architecture.md | ✓ Archived |
-| L2 | 2026-03-03 15:15 | Custom Hooks, Composition | 3.1-L2-custom-hooks.md | ✓ Archived |
+| L1 | {timestamp} | {concepts} | {file} | ✓ Archived |
 
-## 16. Current Checkpoint State
-**Active Layer**: L{N}
+## 15. Current Checkpoint State
+**Active Part**: L{N}
 **Last Checkpoint**: {timestamp}
-**Concepts Since Last Checkpoint**: [if mid-teaching, list here]
-**Context Window Status**: {estimate % full}
+**Concepts Since Last Checkpoint**: []
+**Context Window Status**: {message count} messages since last checkpoint
+
+## 16. How to Use This File
+1. Loaded automatically by Resume Protocol on session start
+2. Review sections 14-15 for current state
+3. Do NOT manually reload — Resume Protocol handles it
+
+## 17. Session History
+| Session | Date | Lessons Covered | Checkpoints | Notes |
+|---------|------|-----------------|-------------|-------|
+| {N} | {date} | {lessons} | {count} | {notes} |
+
+## 18. Backup Log
+| Backup File | Created | Trigger |
+|-------------|---------|---------|
+| backup/master-cumulative-{date}.md | {timestamp} | Checkpoint L{N} |
 ```
 
 **Update Behavior**: Each checkpoint APPENDS to existing bridge sections:

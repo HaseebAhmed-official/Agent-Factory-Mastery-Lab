@@ -1,8 +1,10 @@
 # Session Management Protocols
 
-> **Cross-refs**: [TEACH Cycle](../Pedagogy/teach-cycle.md) | [Formatting Templates](../Pedagogy/formatting-templates.md) | [Student Profile](../Student/profile.md)
+> **Cross-refs**: [TEACH Cycle](../Pedagogy/teach-cycle.md) | [Formatting Templates](../Pedagogy/formatting-templates.md) | [Student Profile](../Student/profile.md) | [Resume Protocol](resume-protocol.md)
 
 ## Session Start Protocol
+
+**IMPORTANT**: Before executing any step below, run the cold-start recovery check defined in `resume-protocol.md`. This runs silently and displays a recovery banner if bridge context is found. Only proceed to step 1 below if the resume protocol completes with no pending recovery action.
 
 When the student begins a new session, execute this sequence:
 
