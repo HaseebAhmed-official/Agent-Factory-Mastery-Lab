@@ -1,9 +1,9 @@
 # Master Cumulative Learning Progress
 
 > **Strategy**: Single living document for ALL sessions — appended at each checkpoint, never replaced
-> **Current Lesson**: 3.17
+> **Current Lesson**: 2.1
 > **Current Layer**: L1
-> **Last Updated**: 2026-03-29 00:00
+> **Last Updated**: 2026-03-06 14:00
 
 ---
 
@@ -36,7 +36,6 @@ Elite tutoring system for Agent Factory Part 1 (AIAF-2026). Student is building 
 - Student challenged: "If spec has no technical details, how to validate?" — resolved with 3-category classification
 - Student challenged: "If I don't specify tech stack, AI picks wrong one" — confirmed tech stack belongs in Layer 1
 - Checkpoint L1 saved
-- Session 03 (2026-03-29): Started Lesson 3.17 Ralph Wiggum Loop — covered Iteration Fatigue, Stop Hook architecture, Completion Promise constraint. Checkpoint L1 saved.
 
 ## 6. Knowledge Graph -- Concepts Mastered
 ```
@@ -50,13 +49,6 @@ Chapter 2: Markdown
 │     ├─ Layer 1 Content Classification
 │     ├─ AI Verification Framework (4 steps)
 │     └─ Real-world markdown contexts
-Chapter 3: Claude Code
-└─ Lesson 3.17: Ralph Wiggum Loop
-   └─ L1: Core Problem & Stop Hook Architecture
-      ├─ Iteration Fatigue (3 hidden cost types)
-      ├─ Stop Hook interception mechanism
-      ├─ Completion Promise (exact-match, static constraint)
-      └─ Iteration Fatigue Threshold (10+ iterations = automate)
 ```
 
 ## 7. Vocabulary Bank -- Terms Introduced
@@ -74,10 +66,6 @@ Chapter 3: Claude Code
 | Specification (spec) | 2.1-L1 | ✓ |
 | Semantic meaning | 2.1-L1 | ✓ |
 | Tokens | 2.1-L1 | ✓ |
-| Iteration fatigue | 3.17-L1 | ✓ |
-| Stop hook | 3.17-L1 | ✓ |
-| Completion promise | 3.17-L1 | ✓ |
-| Autonomous iteration | 3.17-L1 | ✓ |
 
 ## 8. Anti-Patterns Covered
 | Anti-Pattern | Lesson | Checkpoint |
@@ -85,17 +73,12 @@ Chapter 3: Claude Code
 | Vague Delegation | 2.1 | L1 |
 | Spec Abandonment | 2.1 | L1 |
 | Blind Trust | 2.1 | L1 |
-| Unbounded Loop | 3.17 | L1 |
-| Fragile Natural Output Promise | 3.17 | L1 |
 
 ## 9. Frameworks Internalized
 1. **Structured vs Unstructured Pipeline** (2.1-L1): Unstructured→fuzzy boundaries→incomplete output vs Structured→clear boundaries→complete output
 2. **AIDD Three-Layer Model** (2.1-L1): Intent (human spec) → Reasoning (AI plans) → Implementation (AI codes)
 3. **Layer 1 Content Classification** (2.1-L1): Functional requirements ✅, Tech stack ✅, Implementation details ❌
 4. **AI Verification Framework** (2.1-L1): Check → Ask Why → Test by Implementation → Cross-Reference
-5. **Iteration Fatigue Threshold** (3.17-L1): IF iterations ≥ 10 → Automate; IF unknown convergence → Automate; else Manual
-6. **Stop Hook Interception Model** (3.17-L1): Exit Attempt → Hook Fires → Promise Check → Terminate or Reinject
-7. **Promise Design Hierarchy** (3.17-L1): Embedded marker > Stable tool output > Variable tool output
 
 ## 10. Student Strengths & Growth Areas
 **Strengths**:
@@ -123,19 +106,18 @@ revision-notes/
 ```
 
 ## 13. Next Steps
-**Immediate Next**: Lesson 3.17 L2 — Embedded Promise Pattern, ideal use cases, safety guardrails, installation
+**Immediate Next**: Lesson 2.2 — Headings: Creating Document Hierarchy (first hands-on markdown syntax)
 
 ## 14. Checkpoint History
 | Layer | Timestamp | Concepts Covered | File | Status |
 |-------|-----------|------------------|------|--------|
 | L1 | 2026-03-06 14:00 | Structured Text, AIDD 3-Layer, Verification Framework, Layer 1 Classification | 2.1-L1-structured-text-and-intent-layer.md | ✓ Archived |
-| L1 | 2026-03-29 00:00 | Iteration Fatigue, Stop Hook Architecture, Completion Promise Constraint | 3.17-L1-core-problem-and-stop-hook-architecture.md | ✓ Archived |
 
 ## 15. Current Checkpoint State
 **Active Part**: L1
-**Last Checkpoint**: 2026-03-29 00:00
+**Last Checkpoint**: 2026-03-06 14:00
 **Concepts Since Last Checkpoint**: []
-**Context Window Status**: ~8 messages since last checkpoint
+**Context Window Status**: ~20% full
 
 ## 16. How to Use This File
 1. Load this file at session start via Resume Protocol: "Read context-bridge/master-cumulative.md"
@@ -149,11 +131,10 @@ revision-notes/
 | Session | Date | Lessons Covered | Checkpoints | Notes |
 |---------|------|-----------------|-------------|-------|
 | 02 | 2026-03-06 | 2.1 (L1) | 1 | Initial session — bridge renamed to master-cumulative.md |
-| 03 | 2026-03-29 | 3.17 (L1) | 1 | Started Ralph Wiggum Loop — fresh start (bridge preserved from 2.1) |
 
 ---
 
 ## 18. Backup Log
 | Backup File | Created | Trigger |
 |-------------|---------|---------|
-| backup/master-cumulative-2026-03-29.md | 2026-03-29 00:00 | Checkpoint 3.17 L1 |
+| (auto-populated on first checkpoint after upgrade) | — | — |
