@@ -49,9 +49,72 @@ from pathlib import Path
 from typing import Optional, List, Dict, Tuple
 from datetime import datetime
 
+# --- Worktree Detection ---
+
+def get_git_context() -> dict:
+    """
+    Detect git worktree vs main repo and return normalized context.
+
+    In a git worktree, .git is a FILE (not a directory) containing a reference
+    to the main repo's .git directory. This function handles both cases and
+    ensures all git operations use the correct working directory.
+
+    Returns:
+        dict with keys: repo_root, worktree_root, current_branch, is_worktree
+    """
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True, text=True, check=True
+        )
+        worktree_root = Path(result.stdout.strip())
+        git_path = worktree_root / ".git"
+
+        # In a worktree, .git is a FILE referencing the common git dir
+        is_worktree = git_path.is_file()
+
+        if is_worktree:
+            # Parse "gitdir: /path/to/main/.git/worktrees/name"
+            git_file_content = git_path.read_text().strip()
+            worktrees_git_dir = Path(git_file_content.replace("gitdir: ", ""))
+            # .git/worktrees/{name} -> .git -> main repo root
+            main_git_dir = worktrees_git_dir.parent.parent
+            repo_root = main_git_dir.parent
+        else:
+            repo_root = worktree_root
+
+        branch_result = subprocess.run(
+            ["git", "branch", "--show-current"],
+            capture_output=True, text=True, check=True,
+            cwd=str(worktree_root)
+        )
+        current_branch = branch_result.stdout.strip()
+
+        return {
+            "repo_root": repo_root,
+            "worktree_root": worktree_root,
+            "current_branch": current_branch,
+            "is_worktree": is_worktree,
+        }
+    except (subprocess.CalledProcessError, OSError):
+        # Fallback to original behavior if detection fails
+        fallback = Path(__file__).parent.parent.absolute()
+        return {
+            "repo_root": fallback,
+            "worktree_root": fallback,
+            "current_branch": "main",
+            "is_worktree": False,
+        }
+
+
 # --- Configuration ---
 
-REPO_ROOT = Path(__file__).parent.parent.absolute()
+# Determine repo root dynamically (handles worktrees)
+_GIT_CONTEXT = get_git_context()
+REPO_ROOT = _GIT_CONTEXT["repo_root"]
+# Git operations (add, commit, push) must run from the working tree where
+# files actually live — for worktrees this differs from repo_root.
+WORK_ROOT = _GIT_CONTEXT["worktree_root"]
 DEFAULT_REMOTE = "origin"
 DEFAULT_BRANCH = "main"
 TAG_PREFIX = "lesson-"
@@ -98,12 +161,17 @@ def print_info(text: str):
     print(f"{Colors.BLUE}ℹ{Colors.NC} {text}")
 
 def run_command(cmd: List[str], capture_output: bool = True, check: bool = True) -> subprocess.CompletedProcess:
-    """Run shell command safely"""
+    """Run shell command safely from the active working tree root.
+
+    Uses WORK_ROOT (worktree root) rather than REPO_ROOT so that git add/commit/push
+    operate on the files in the current working tree. In a worktree these differ:
+    REPO_ROOT is the main repo, WORK_ROOT is the worktree where files live.
+    """
     try:
         if capture_output:
-            result = subprocess.run(cmd, capture_output=True, text=True, check=check, cwd=REPO_ROOT)
+            result = subprocess.run(cmd, capture_output=True, text=True, check=check, cwd=str(WORK_ROOT))
         else:
-            result = subprocess.run(cmd, check=check, cwd=REPO_ROOT)
+            result = subprocess.run(cmd, check=check, cwd=str(WORK_ROOT))
         return result
     except subprocess.CalledProcessError as e:
         print_error(f"Command failed: {' '.join(cmd)}")
@@ -118,7 +186,14 @@ class GitManager:
 
     def __init__(self, dry_run: bool = False):
         self.dry_run = dry_run
-        self.repo_root = REPO_ROOT
+        ctx = get_git_context()
+        self.repo_root = ctx["repo_root"]
+        self.worktree_root = ctx["worktree_root"]
+        self.current_branch = ctx["current_branch"]
+        self.is_worktree = ctx["is_worktree"]
+        if self.is_worktree:
+            print_info(f"Worktree detected: {self.worktree_root}")
+            print_info(f"Main repo root: {self.repo_root}")
 
     def is_git_repo(self) -> bool:
         """Check if current directory is a git repository"""
@@ -273,11 +348,16 @@ class CheckpointAutoPush:
             print_info("Hint: Add a remote with: git remote add origin <url>")
             remote = None
 
-        # 3. Stage checkpoint files
+        # 3. Stage checkpoint files (worktree-aware paths)
+        layer_lower = layer.lower()
         patterns = [
-            f"revision-notes/**/module*/{lesson}-*/{lesson}-{layer}-*.md",
-            f"context-bridge/session-*-cumulative.md",
-            f"revision-notes/**/module*/{lesson}-*/.checkpoint-meta.json"
+            f"revision-notes/**/module*/{lesson}-*/{lesson}-{layer_lower}-*.md",
+            f"context-bridge/master-cumulative.md",
+            f"context-bridge/snapshots/lesson-{lesson}-{layer_lower}-*.md",
+            f"context-bridge/backup/master-cumulative-*.md",
+            f"revision-notes/**/module*/{lesson}-*/.checkpoint-meta.json",
+            f"revision-notes/**/module*/{lesson}-*/teaching-log-current.md",
+            f"revision-notes/**/module*/{lesson}-*/pending-topics.md",
         ]
 
         print_info("Staging checkpoint files...")
@@ -331,10 +411,12 @@ class CheckpointAutoPush:
             print_warning("No git remote configured. Skipping push.")
             remote = None
 
-        # 3. Stage all lesson artifacts
+        # 3. Stage all lesson artifacts (worktree-aware paths)
         patterns = [
             f"revision-notes/**/module*/{lesson}-*/*.md",
-            f"context-bridge/session-*-cumulative.md",
+            f"context-bridge/master-cumulative.md",
+            f"context-bridge/snapshots/lesson-{lesson}-*.md",
+            f"context-bridge/backup/master-cumulative-*.md",
             f"visual-presentations/session-*-lesson-{lesson}-*.html",
             f"quick-reference/lesson-{lesson}-*.md",
             f"flashcards/lesson-{lesson}-*.json",
@@ -432,6 +514,8 @@ Examples:
                         help="Show what would be done without making changes")
     parser.add_argument("--skip-quality", action="store_true",
                         help="Skip quality validation (use with caution)")
+    parser.add_argument("--worktree-aware", action="store_true",
+                        help="Enable explicit worktree detection (auto-detected by default)")
 
     args = parser.parse_args()
 

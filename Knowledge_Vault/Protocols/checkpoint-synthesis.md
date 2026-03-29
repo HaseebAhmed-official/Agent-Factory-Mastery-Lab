@@ -7,6 +7,23 @@
 
 ---
 
+## COMMAND NORMALIZATION
+
+The Checkpoint command is recognized under the following conditions:
+
+**Recognized forms** (all equivalent):
+- `Checkpoint` / `checkpoint` / `CHECKPOINT` (case-insensitive)
+- Command at start of message: "Checkpoint but also..." → execute checkpoint first, then handle remainder
+- Phrases: "Save progress", "Quick checkpoint", "Let's checkpoint"
+
+**NOT recognized** when embedded in an interrogative:
+- Preceded by: "what is", "explain", "define", "how does", "about", "does", "why"
+- Message contains "?" AND command word is not at the message start
+
+**Detection rule**: If "checkpoint" appears as an imperative (standalone, or first word of sentence), trigger workflow. If embedded inside a question or explanation request, suppress.
+
+---
+
 ## DIRECTIVE
 
 Upon receiving the command **"Checkpoint"**, halt teaching and execute the following **two-tier archival workflow**. You are capturing progress at a semantic boundary to:
@@ -27,7 +44,25 @@ Before producing any output, analyze content **since the last checkpoint** (or s
    - If file doesn't exist, this is Checkpoint 1 (start = session beginning)
    - If file exists, find latest checkpoint timestamp
 
-2. **Extract teaching content since that timestamp**:
+2. **Read teaching log first** (primary source — survives `/clear`):
+   - Check for `{lesson-directory}/teaching-log-current.md`
+   - **If file exists and has content**: Use as the authoritative record of concepts taught since last checkpoint. This file persists through `/clear` because it lives on disk, not in conversation memory.
+   - **If file does not exist**: Fall back to conversation history (normal for very first checkpoint of a session before any teaching log was written)
+   - **After Stage 5 completes successfully**: Truncate `teaching-log-current.md` to empty content (new concepts start fresh for next checkpoint interval)
+
+   **Teaching log format** (written by Professor Agent after each TEACH cycle step):
+   ```
+   ## Concept: {Name}
+   **Taught**: {ISO timestamp}
+   **TEACH coverage**: T✓ E✓ A✓ C✓ H✓  (mark each as ✓ complete or ~ partial)
+   **Key points**:
+   - {point 1}
+   - {point 2}
+   **Vocab introduced**: {term1}, {term2}
+   **Exercises completed**: {exercise name or "none"}
+   ```
+
+   **Extract from log or conversation** (same categories regardless of source):
    - **Concepts introduced**: Major ideas, definitions, explanations
    - **Vocabulary defined**: All new terms with definitions
    - **Frameworks taught**: Mental models, decision trees, formulas
@@ -47,10 +82,25 @@ Before producing any output, analyze content **since the last checkpoint** (or s
    - Unrelated side-questions
    - "Let me explain...", "Great!", "That's correct!" (artifacts)
 
-4. **Determine checkpoint metadata**:
-   - **Depth layer**: L1 (fundamentals), L2 (intermediate), L3 (advanced)
-   - **Semantic concept name**: Kebab-case primary concept (e.g., "hook-architecture")
-   - **Part number**: Glob existing `{X.Y}-L*-*.md` files, find max depth, increment or assign
+4. **Determine checkpoint metadata** (deterministic rules — no subjective judgment):
+
+   **Layer Assignment Algorithm** — read `.checkpoint-meta.json`, apply first matching rule:
+
+   | Condition | Assign Layer |
+   |-----------|-------------|
+   | No prior checkpoints exist for this lesson | **L1** |
+   | Content is exclusively definitions/vocabulary (no procedures) | **L1** |
+   | L1 exists AND content includes mechanics/procedures/how-it-works | **L2** |
+   | L2 exists AND content includes any of: anti-patterns, edge cases, strategic scenarios, failure analysis | **L3** |
+   | L3 exists (or any LN exists) | **L{N+1}** (increment from last — no cap) |
+
+   **Mixed-depth content** (single checkpoint spans multiple levels):
+   - Assign the **HIGHEST depth level present**
+   - Add to YAML frontmatter: `contains_layers: [L1, L2, L3]`
+
+   **Semantic concept name**: Primary noun phrase most repeated in content. Kebab-case. Max 50 characters.
+
+   **File existence check**: Glob `{X.Y}-L*-*.md`. If a file with the same layer already exists, append `-b` suffix: `{X.Y}-L2-hooks.md` → `{X.Y}-L2-hooks-b.md`
 
 ---
 
@@ -312,16 +362,33 @@ If quality gate fails, revise content before proceeding to Stage 3.
 
 ## STAGE 3: Cumulative Bridge Update
 
-**File**: `context-bridge/session-{NN}-cumulative.md`
+**File**: `context-bridge/master-cumulative.md`
 
 **Update mode**: **APPEND** to existing sections (do NOT rewrite entire file)
+
+### Pre-Write: Rolling Backup
+
+**Before any append to the bridge**, execute backup:
+
+1. **Read** `context-bridge/master-cumulative.md`
+2. **Write copy** to `context-bridge/backup/master-cumulative-{YYYY-MM-DD}.md`
+3. **Prune**: List all files in `context-bridge/backup/`. If count > 3, delete the file with the oldest date in its filename.
+4. **Archive check**: Count lines in `master-cumulative.md`. If > 300:
+   - Move Section 5 (Session Flow) older entries and Section 14 rows older than the 5 most recent into `context-bridge/archive/master-cumulative-archived-{YYYY-MM-DD}.md`
+   - Append to master: `> See archive/master-cumulative-archived-{YYYY-MM-DD}.md for earlier content.`
+
+Only then proceed with the append operations below.
 
 ### Sections to Update
 
 #### Add to "Checkpoint History" table:
 ```markdown
-| L{depth} | {YYYY-MM-DD HH:MM} | {Concepts covered} | {X.Y}-L{depth}-{concept}.md | ✓ Archived |
+| L{depth} | {YYYY-MM-DD HH:MM} | {Concepts covered} | {X.Y}-L{depth}-{concept}.md | ⏳ Saving... |
 ```
+
+**Important**: Write status as `⏳ Saving...` now. After Stage 4 completes successfully, return to this row and update: `⏳ Saving...` → `✓ Archived`
+
+If Stage 4 fails after all retries: update status to `⚠️ Meta failed — repair needed`
 
 #### Append to "Vocabulary Bank":
 ```markdown
@@ -351,8 +418,52 @@ If quality gate fails, revise content before proceeding to Stage 3.
 **Active Part**: L{depth}
 **Last Checkpoint**: {YYYY-MM-DD HH:MM}
 **Concepts Since Last Checkpoint**: [empty - just checkpointed]
-**Context Window Status**: {estimate % full}
+**Context Window Status**: {message count since last checkpoint} messages
 ```
+
+#### Update "Session History" (Section 17):
+- If this is a new session (different date than last row), append a new row
+- If same session (same date), update the checkpoint count in the existing row
+
+#### Update "Backup Log" (Section 18):
+```markdown
+| backup/master-cumulative-{YYYY-MM-DD}.md | {YYYY-MM-DD HH:MM} | Checkpoint L{depth} |
+```
+
+---
+
+### Snapshot Write (Rewind Support)
+
+After ALL section updates above are complete, write a frozen snapshot:
+
+**File**: `context-bridge/snapshots/lesson-{X.Y}-L{depth}-{semantic-concept}-snapshot.md`
+
+**Content**:
+```markdown
+# Snapshot: Lesson {X.Y} Layer L{depth}
+> **Frozen at**: {ISO8601 timestamp}
+> **Semantic concept**: {kebab-case-name}
+> **Purpose**: Read-only. Used by Rewind protocol. Do not modify.
+> **Master bridge row**: L{depth} | {timestamp} | ⏳ Saving...
+
+---
+
+{Copy verbatim from master-cumulative.md at this moment:}
+
+## Knowledge Graph (Section 6 snapshot)
+{paste section 6 content}
+
+## Vocabulary Bank (Section 7 snapshot)
+{paste section 7 content}
+
+## Checkpoint History (Section 14 snapshot)
+{paste section 14 content — including the new ⏳ row just added}
+
+## Current Checkpoint State (Section 15 snapshot)
+{paste section 15 content}
+```
+
+This snapshot is **immutable** after creation. Never modify it.
 
 ---
 
@@ -458,7 +569,7 @@ revision-notes/
 
 **Purpose**: Track checkpoint tree structure, enable Rewind command
 
-### Write Process (Atomic)
+### Write Process (With Retry)
 
 1. **Write to temporary file**: `.checkpoint-meta.tmp.json`
 2. **Build JSON structure**:
@@ -496,12 +607,30 @@ revision-notes/
 }
 ```
 
-3. **Atomic rename**: `.checkpoint-meta.tmp.json` → `.checkpoint-meta.json`
+3. **Write with retry** (3 attempts):
+   - **Attempt 1**: Write `.checkpoint-meta.json` immediately
+   - **If fails**: Wait 1 second, retry (Attempt 2)
+   - **If fails again**: Wait 2 seconds, retry (Attempt 3)
+   - **All 3 fail**:
+     a. Keep `.checkpoint-meta.tmp.json` intact (do NOT delete)
+     b. Update bridge row status: `⏳ Saving...` → `⚠️ Meta failed — repair needed`
+     c. Alert user:
+        ```
+        ⚠️ Stage 4 failed after 3 attempts.
+        Notes and bridge are saved safely.
+        Metadata could not be written.
+
+        Options:
+        - Type 'Repair' next session to auto-fix
+        - Manually rename: .checkpoint-meta.tmp.json → .checkpoint-meta.json
+        ```
+     d. Continue to Stage 5 using `.tmp` file data (do NOT block teaching)
 
 ### Error Handling
 
-- If rename fails: Keep `.tmp` file, alert user, allow manual recovery
-- On session start: Check for orphaned `.tmp` files, offer recovery
+- If all retries fail: Keep `.tmp` file, update bridge with `⚠️` status, continue gracefully
+- On session start (via Resume Protocol): Check for `.tmp` files and `⚠️` bridge rows, offer repair
+- After successful write: Update bridge row `⏳ Saving...` → `✓ Archived`
 
 ---
 
@@ -515,8 +644,11 @@ After writing checkpoint files successfully:
 
    Files created:
    - Master notes: {file-path}
-   - Bridge updated: context-bridge/session-{NN}-cumulative.md
+   - Bridge updated: context-bridge/master-cumulative.md
+   - Backup created: context-bridge/backup/master-cumulative-{YYYY-MM-DD}.md
+   - Snapshot saved: context-bridge/snapshots/lesson-{X.Y}-L{depth}-{concept}-snapshot.md
    - Metadata: .checkpoint-meta.json
+   - Bridge row: ✓ Archived
    ```
 
 2. **Signal context refresh**:
@@ -525,9 +657,10 @@ After writing checkpoint files successfully:
    ```
 
 3. **Reload from cumulative bridge**:
-   - Read `context-bridge/session-{NN}-cumulative.md`
-   - Parse checkpoint history
-   - Identify current state
+   - Read `context-bridge/master-cumulative.md`
+   - Parse checkpoint history (Section 14)
+   - Identify current state (Section 15)
+   - Also truncate `teaching-log-current.md` to empty content (new concepts start fresh)
 
 4. **Reinitialize teaching state**:
    ```
@@ -564,14 +697,19 @@ After writing checkpoint files successfully:
    - Check if `scripts/git-auto-push.py` exists
    - Skip if either is missing (graceful degradation)
 
-2. **Invoke auto-push script**:
+2. **Invoke auto-push script** (worktree-aware):
    ```bash
-   python3 scripts/git-auto-push.py checkpoint {X.Y} L{depth}
+   python3 scripts/git-auto-push.py checkpoint {X.Y} L{depth} --worktree-aware
    ```
 
 3. **Script handles**:
-   - Auto-detect git remote
-   - Stage checkpoint files (notes + bridge + metadata)
+   - Auto-detect git context (worktree vs main repo) via `get_git_context()`
+   - Stage checkpoint files:
+     - `revision-notes/{lesson-dir}/{X.Y}-L{depth}-{concept}.md`
+     - `context-bridge/master-cumulative.md`
+     - `context-bridge/snapshots/lesson-{X.Y}-L{depth}-*.md`
+     - `context-bridge/backup/master-cumulative-*.md`
+     - `.checkpoint-meta.json`
    - Create semantic commit message
    - Run pre-commit quality hook (validates notes)
    - Push to remote if configured
@@ -659,9 +797,13 @@ Do NOT save checkpoint. Wait for more teaching content, then user can retry.
 - **Incremental**: Only document content since last checkpoint
 - **Focused**: Each part file covers one depth layer or major concept
 - **Voice transformation**: Always apply professional documentation voice
-- **Atomic writes**: Use `.tmp` files, rename when complete
-- **Quality gates**: Validate before saving
+- **Retry writes**: Use `.tmp` files + 3-attempt retry for metadata JSON
+- **Quality gates**: Validate before saving (fill checklist, do not self-pass)
 - **Auto-reload**: Treat reload as fresh start with bridge context
+- **Teaching log write**: Append to `{lesson-dir}/teaching-log-current.md` after each TEACH cycle step completes. This file is the fallback audit source if `/clear` occurs before checkpoint.
+- **Teaching log truncate**: After Stage 5 (auto-reload) completes successfully, overwrite `teaching-log-current.md` with empty content. New teaching starts fresh.
+- **Bridge is master-cumulative.md**: Never reference old session-numbered bridge files.
+- **Snapshot is mandatory**: Always write snapshot to `context-bridge/snapshots/` in Stage 3. No exceptions.
 
 ---
 

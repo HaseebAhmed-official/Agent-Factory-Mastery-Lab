@@ -25,8 +25,15 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 # Script configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+# Use git working tree root when available — correctly handles linked worktrees
+# (git rev-parse --show-toplevel returns the worktree root, not the main repo)
+# Falls back to script-relative path for non-git or standalone usage.
+if PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"; then
+    : # PROJECT_ROOT set to active working tree root
+else
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+fi
 REVISION_NOTES_DIR="$PROJECT_ROOT/revision-notes"
 
 # Scoring thresholds

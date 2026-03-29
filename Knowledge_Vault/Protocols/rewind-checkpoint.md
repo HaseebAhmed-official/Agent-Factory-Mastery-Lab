@@ -131,37 +131,36 @@ Once user selects checkpoint (e.g., "L2"):
 
 ---
 
-### Step 2: Read Bridge State at That Time
+### Step 2: Read Snapshot File for Selected Checkpoint
 
-**Approach**: Reconstruct bridge state AS OF that checkpoint
+**File**: `context-bridge/snapshots/lesson-{X.Y}-L{selected}-*-snapshot.md`
 
-**From metadata JSON**:
-- Checkpoint timestamp: `{ISO8601}`
-- Concepts covered up to this point: All checkpoints ≤ selected layer
-- Vocabulary known: Cumulative from L1 to L{selected}
-- Frameworks introduced: Cumulative from L1 to L{selected}
+**Why snapshots instead of bridge reconstruction**:
+The `master-cumulative.md` bridge is append-only and never rolled back. Rolling it back would destroy all learning from lessons/checkpoints that came AFTER the selected rewind point. Instead, each checkpoint saves a frozen snapshot that captures bridge state at that exact moment.
 
-**Generate summary**:
+**If snapshot file exists** (standard path):
+- Parse the frozen sections: Knowledge Graph, Vocabulary Bank, Checkpoint History, Current State
+- This IS the authoritative state — no reconstruction needed
+
+**If snapshot file does NOT exist** (legacy checkpoint predating snapshot system):
+- Fall back to metadata reconstruction (original approach: cumulate all checkpoints ≤ selected layer)
+- Warn: "⚠️ This checkpoint was created before the snapshot system was introduced. Context restoration may be incomplete."
+
+**Generate summary from snapshot content**:
 ```
 📍 Context Restored to Checkpoint L{selected}
 
 **Lesson {X.Y}** | **Layer L{selected}: {Semantic Concept}**
-**Timestamp**: {YYYY-MM-DD HH:MM}
+**Timestamp**: {from snapshot header}
 
-**Concepts Covered** (up to this checkpoint):
-├─ L1: {Concept A}, {Concept B}, {Concept C}
-└─ L{selected}: {Concept D}, {Concept E}
+**Knowledge Graph** (at this checkpoint):
+{paste from snapshot Section 6}
 
-**Vocabulary Known**: {N} terms
-{List top 5-10 key terms}
+**Vocabulary Known** (at this checkpoint): {N} terms
+{list from snapshot Section 7}
 
-**Frameworks Introduced**: {N} frameworks
-1. {Framework A} (L1)
-2. {Framework B} (L{selected})
-
-**Exercises Completed**: {N} exercises
-- {Exercise 1} (L1)
-- {Exercise 2} (L{selected})
+**Checkpoint History** (at this point):
+{table from snapshot Section 14}
 ```
 
 ---
@@ -547,11 +546,15 @@ Your choice (1/2/3):
 ## CONSTRAINTS
 
 - **Non-destructive**: Original checkpoints preserved (archived, not deleted)
+- **Master bridge is NEVER rolled back**: `master-cumulative.md` is append-only. Rewind reads from snapshots — the master bridge continues to accumulate forward even after a rewind.
+- **Snapshots are read-only**: Files in `context-bridge/snapshots/` are never modified or deleted during Rewind. They are permanent historical records.
+- **Rewind is non-destructive by design**: Restoring context from a snapshot does NOT erase newer checkpoints — those files and bridge entries remain intact.
+- **Cross-lesson rewind**: If user says "Rewind" without a lesson context, Stage 1 Step 1 ALWAYS asks "Which lesson?" first. Default is current lesson only if clearly in an active lesson.
 - **Branching support**: Multiple paths from same parent checkpoint allowed
 - **User choice**: Always present options, never auto-decide merge strategy
 - **Visual clarity**: Checkpoint trees must be clear and navigable
 - **Metadata integrity**: Checkpoint JSON always reflects current state
-- **Context accuracy**: Restored state matches checkpoint timestamp exactly
+- **Context accuracy**: Restored state from snapshot matches checkpoint timestamp exactly
 
 ---
 

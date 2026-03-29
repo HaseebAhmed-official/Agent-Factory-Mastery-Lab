@@ -1,6 +1,6 @@
-# Session 02 -- Cumulative Learning Progress
+# Master Cumulative Learning Progress
 
-> **Started**: 2026-03-06
+> **Strategy**: Single living document for ALL sessions — appended at each checkpoint, never replaced
 > **Current Lesson**: 2.1
 > **Current Layer**: L1
 > **Last Updated**: 2026-03-06 14:00
@@ -120,6 +120,21 @@ revision-notes/
 **Context Window Status**: ~20% full
 
 ## 16. How to Use This File
-1. Load this file at session start: "Read context-bridge/session-02-cumulative.md"
-2. Review checkpoint history to see progress
-3. Resume from "Current Checkpoint State"
+1. Load this file at session start via Resume Protocol: "Read context-bridge/master-cumulative.md"
+2. Review sections 14-15 for checkpoint history and current state
+3. Resume from "Current Checkpoint State" — do NOT restart from scratch
+4. Bridge is automatically backed up before each checkpoint update (see context-bridge/backup/)
+
+---
+
+## 17. Session History
+| Session | Date | Lessons Covered | Checkpoints | Notes |
+|---------|------|-----------------|-------------|-------|
+| 02 | 2026-03-06 | 2.1 (L1) | 1 | Initial session — bridge renamed to master-cumulative.md |
+
+---
+
+## 18. Backup Log
+| Backup File | Created | Trigger |
+|-------------|---------|---------|
+| (auto-populated on first checkpoint after upgrade) | — | — |
