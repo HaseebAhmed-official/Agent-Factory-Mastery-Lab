@@ -24,6 +24,29 @@ This is a **lesson completion** event -- different from mid-lesson checkpoints.
 
 ## STAGE 1: Session Audit (Since Last Checkpoint)
 
+### Pre-Finish Confirmation
+
+Before executing the 6-tier synthesis, display:
+```
+📋 FINISH CONFIRMATION
+
+This will:
+✅ Create final checkpoint part file
+✅ Update context bridge (final)
+✅ Generate HTML presentation
+✅ Create quick reference cheatsheet
+✅ Generate flashcard deck
+✅ Run Chapter Assessment (if last lesson of chapter)
+
+Type **YES** to proceed with full synthesis, or **CHECKPOINT** to save progress without finishing.
+```
+
+If user types YES: proceed.
+If user types CHECKPOINT: execute Checkpoint workflow instead.
+If user types anything else: ask again once, then cancel with: "Finish cancelled. Type 'Finish' again when ready."
+
+---
+
 Identical to Checkpoint Protocol Stage 1:
 
 1. **Identify last checkpoint timestamp** (from `.checkpoint-meta.json`)
@@ -89,6 +112,43 @@ revision-notes/
 visual-presentations/
 └─ session-{NN}-lesson-{X.Y}-{title}.html  ← NEW
 ```
+
+---
+
+## STAGE 3.5: Auto-Verify Coverage (Mandatory)
+
+**Purpose**: Catch curriculum gaps before generating celebration artifacts. Do not skip.
+
+Run the Verify protocol now (do not wait for user to manually type `Verify`):
+
+1. Read `Knowledge_Vault/Protocols/verify-coverage.md`
+2. Compare what was taught this lesson against the curriculum module for this lesson
+3. Generate a gap report:
+   - ✅ Covered topics
+   - ⚠️ Partially covered topics (mentioned but not deeply taught)
+   - ❌ Missing topics (in curriculum but not covered)
+
+**If gaps found**:
+```
+📋 Coverage Check Complete
+
+Gaps detected in Lesson {X.Y}:
+⚠️ [partially covered topics]
+❌ [missing topics]
+
+Options:
+1. Cover gaps now (recommended — 5-10 min)
+2. Note gaps and continue to synthesis (they'll appear in the cheatsheet as "review needed")
+3. Skip gap check entirely
+
+Type 1, 2, or 3.
+```
+
+**If no gaps**: Display "✅ Full coverage confirmed" and proceed to STAGE 4 automatically.
+
+**If gaps are covered** (user chooses 1): re-run gap check, then proceed.
+
+**Gap documentation**: Regardless of choice, add gap notes to bridge Section 5 (Core Concepts Summary) as "⚠️ Needs Review: [topic]".
 
 ---
 
@@ -739,6 +799,42 @@ graph TD
 
 3. **Generate Anki-compatible JSON**:
 
+### Flashcard JSON Schema (Anki-Compatible)
+
+Each card in the deck must include:
+
+```json
+{
+  "id": "lesson-3.1-hook-architecture-001",
+  "front": "What is a hook, and when would you use one?",
+  "back": "A hook is a callback registered at a lifecycle point. Use when you need to extend agent behavior at specific execution moments without modifying core code.",
+  "tags": ["chapter-3", "hooks", "lifecycle", "L1"],
+  "lesson": "3.1",
+  "layer": "L1",
+  "concept": "Hook Architecture",
+  "bloom_level": 1,
+  "review_count": 0,
+  "ease_factor": 2.5,
+  "interval_days": 1,
+  "next_review": "YYYY-MM-DD",
+  "last_review": null,
+  "created": "YYYY-MM-DD"
+}
+```
+
+**Field notes**:
+- `ease_factor`: Starts at 2.5 (Anki default). Decreases when student struggles.
+- `interval_days`: Days until next review. Starts at 1, grows by ease_factor each pass.
+- `bloom_level`: 1=Remember, 2=Understand, 3=Apply, 4=Analyze, 5=Evaluate, 6=Create
+- `tags`: Include chapter, concept name, and layer for filtering in Anki
+
+**Minimum cards per lesson**:
+- 1 card per vocabulary term (front: definition question, back: definition)
+- 1 card per core concept (front: application question, back: explanation + example)
+- 1 synthesis card per lesson (front: cross-concept question, back: integrated answer)
+
+Full deck structure:
+
 ```json
 {
   "deck_name": "Agent Factory - Lesson {X.Y}: {Title}",
@@ -748,47 +844,75 @@ graph TD
       "type": "vocab",
       "front": "What is {Term} in the context of {domain}?",
       "back": "{Definition}",
-      "tags": ["{X.Y}", "{topic}", "vocabulary", "fundamentals"],
-      "difficulty": "easy",
-      "source": "revision-notes/.../3.{X}-L1-{concept}.md#vocabulary",
-      "layer": "L1"
+      "tags": ["chapter-{N}", "{topic}", "vocabulary", "L1"],
+      "lesson": "{X.Y}",
+      "layer": "L1",
+      "concept": "{Term}",
+      "bloom_level": 1,
+      "review_count": 0,
+      "ease_factor": 2.5,
+      "interval_days": 1,
+      "next_review": "{YYYY-MM-DD}",
+      "last_review": null,
+      "created": "{YYYY-MM-DD}"
     },
     {
       "id": "{X.Y}-concept-001",
       "type": "concept",
       "front": "Describe the {Concept Name} and its purpose.",
       "back": "{What it is + Why it matters + Brief how it works}",
-      "tags": ["{X.Y}", "{topic}", "concept", "intermediate"],
-      "difficulty": "medium",
-      "source": "revision-notes/.../3.{X}-L2-{concept}.md#{section}",
-      "layer": "L2"
+      "tags": ["chapter-{N}", "{topic}", "concept", "L2"],
+      "lesson": "{X.Y}",
+      "layer": "L2",
+      "concept": "{Concept Name}",
+      "bloom_level": 2,
+      "review_count": 0,
+      "ease_factor": 2.5,
+      "interval_days": 1,
+      "next_review": "{YYYY-MM-DD}",
+      "last_review": null,
+      "created": "{YYYY-MM-DD}"
     },
     {
       "id": "{X.Y}-antipattern-001",
       "type": "antipattern",
       "front": "What goes wrong if {specific misuse}?",
       "back": "{Problem description}<br><br><strong>Fix:</strong> {Correct approach}",
-      "tags": ["{X.Y}", "anti-patterns", "debugging"],
-      "difficulty": "hard",
-      "source": "revision-notes/.../3.{X}-L2-{concept}.md#anti-patterns",
-      "layer": "L2"
+      "tags": ["chapter-{N}", "anti-patterns", "debugging"],
+      "lesson": "{X.Y}",
+      "layer": "L2",
+      "concept": "{Anti-Pattern Name}",
+      "bloom_level": 4,
+      "review_count": 0,
+      "ease_factor": 2.5,
+      "interval_days": 1,
+      "next_review": "{YYYY-MM-DD}",
+      "last_review": null,
+      "created": "{YYYY-MM-DD}"
     },
     {
-      "id": "{X.Y}-framework-001",
-      "type": "framework",
-      "front": "Explain the {Framework Name} framework.",
-      "back": "{Formula/Pattern}<br><br>{Application guidance}",
-      "tags": ["{X.Y}", "frameworks", "mental-models"],
-      "difficulty": "medium",
-      "source": "revision-notes/.../3.{X}-L1-{concept}.md#frameworks",
-      "layer": "L1"
+      "id": "{X.Y}-synthesis-001",
+      "type": "synthesis",
+      "front": "{Cross-concept question integrating 2+ topics from this lesson}",
+      "back": "{Integrated answer drawing connections between concepts}",
+      "tags": ["chapter-{N}", "synthesis", "L{N}"],
+      "lesson": "{X.Y}",
+      "layer": "L{N}",
+      "concept": "Lesson Synthesis",
+      "bloom_level": 5,
+      "review_count": 0,
+      "ease_factor": 2.5,
+      "interval_days": 1,
+      "next_review": "{YYYY-MM-DD}",
+      "last_review": null,
+      "created": "{YYYY-MM-DD}"
     }
   ],
   "metadata": {
     "lesson": "{X.Y}",
     "total_cards": {N},
     "created": "{ISO8601 timestamp}",
-    "version": "1.0",
+    "version": "2.0",
     "layers": ["L1", "L2", "L{N}"],
     "export_ready": true
   }

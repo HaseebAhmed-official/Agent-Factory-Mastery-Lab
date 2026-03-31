@@ -18,3 +18,6 @@ pyyaml>=6.0
 
 # Progress bars for long operations (optional)
 tqdm>=4.66.0
+
+# HTML templating for presentation generation
+jinja2>=3.0.0
