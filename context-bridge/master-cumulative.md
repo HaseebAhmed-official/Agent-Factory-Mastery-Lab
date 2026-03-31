@@ -1,14 +1,14 @@
 # Master Cumulative Learning Progress
 
 > **Strategy**: Single living document for ALL sessions — appended at each checkpoint, never replaced
-> **Current Lesson**: None (fresh start)
+> **Current Lesson**: None — fresh start
 > **Current Layer**: None
-> **Last Updated**: 2026-03-29
+> **Last Updated**: —
 
 ---
 
 ## 1. Project Essence
-Elite tutoring system for Agent Factory Part 1 (AIAF-2026). Student is building deep understanding of AI agent foundations across 6 chapters. No topics have been covered yet — this is a fresh start.
+Elite tutoring system for Agent Factory Part 1 (AIAF-2026). Student is building deep understanding of AI agent foundations across 6 chapters. No lessons started yet.
 
 ## 2. Student Profile & Learning DNA
 - **Level**: Intermediate — used ChatGPT/Claude conversationally, new to agentic AI
@@ -25,38 +25,43 @@ Elite tutoring system for Agent Factory Part 1 (AIAF-2026). Student is building 
 **Directory Structure**: `revision-notes/ch{N}-{name}/module{X}-{name}/{X.Y}-{lesson}/`
 
 ## 5. Session Flow
-No sessions completed yet.
+*(No sessions yet)*
 
 ## 6. Knowledge Graph -- Concepts Mastered
-```
-(empty — no topics covered yet)
-```
+*(None yet)*
 
 ## 7. Vocabulary Bank -- Terms Introduced
-| Term | First Introduced | Defined? |
-|------|-----------------|----------|
+| Term | First Introduced | Layer | LastReview | NextReviewDue | ReviewCount | ConfidenceRating |
+|------|-----------------|-------|------------|---------------|-------------|------------------|
 
 ## 8. Anti-Patterns Covered
 | Anti-Pattern | Lesson | Checkpoint |
 |-------------|--------|-----------|
 
 ## 9. Frameworks Internalized
-(none yet)
+*(None yet)*
 
 ## 10. Student Strengths & Growth Areas
-**Strengths**: (to be discovered)
-**Growth Areas**: (to be discovered)
+*(To be updated as lessons progress)*
 
 ## 11. Collaboration Style & Tone
-(to be established)
+- Direct responses; casual typing style
+- Prefers to move at a deliberate pace
 
 ## 12. Repository Structure
 ```
-(empty — no files created yet)
+revision-notes/
+└── (empty — no lessons completed)
+
+context-bridge/
+├── master-cumulative.md (this file)
+├── status.json
+├── backup/ (empty)
+└── snapshots/ (empty)
 ```
 
 ## 13. Next Steps
-**Immediate Next**: Begin from the very first lesson (wherever the student wants to start)
+**Start from the beginning** — no lessons have been covered yet.
 
 ## 14. Checkpoint History
 | Layer | Timestamp | Concepts Covered | File | Status |
@@ -69,10 +74,9 @@ No sessions completed yet.
 **Context Window Status**: 0 messages since last checkpoint
 
 ## 16. How to Use This File
-1. Load this file at session start via Resume Protocol
-2. Review sections 14-15 for checkpoint history and current state
-3. Resume from "Current Checkpoint State" — do NOT restart from scratch
-4. Bridge is automatically backed up before each checkpoint update
+1. Loaded automatically by Resume Protocol on session start
+2. Review sections 14-15 for current state
+3. Do NOT manually reload — Resume Protocol handles it
 
 ---
 

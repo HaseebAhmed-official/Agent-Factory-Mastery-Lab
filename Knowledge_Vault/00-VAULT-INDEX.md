@@ -13,6 +13,10 @@
 | `Frameworks/` | Anti-patterns, edge-case protocol, cross-chapter connection map, scope boundaries | Failure analysis, "what goes wrong" discussions, connecting concepts |
 | `Student/` | Student profile, learning style, constraints | Calibrating depth, adjusting pace, first session diagnostics |
 | `Capabilities/` | Behavioral rules: must-do, must-never-do, capabilities list | Verifying behavioral constraints before any action |
+| Pre-lesson retrieval or spaced review | `Knowledge_Vault/Protocols/pre-lesson-retrieval.md` |
+| Mastery rubric evaluation, re-teach loop, or comprehension gate | `Knowledge_Vault/Assessment/mastery-rubrics.md` |
+| Chapter assessment, chapter completion, chapter-level test | `Knowledge_Vault/Protocols/chapter-assessment.md` |
+| Interleaved review or every 3rd session cross-chapter practice | `Knowledge_Vault/Protocols/pre-lesson-retrieval.md` |
 
 ## File Inventory
 

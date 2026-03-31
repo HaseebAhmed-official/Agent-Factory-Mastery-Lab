@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ lesson_id }} — {{ lesson_title }}</title>
+  <style>
+    /* ── CSS Variables (theme) ── */
+    :root {
+      --bg:        #f8f7f4;
+      --surface:   #ffffff;
+      --border:    #e2e0da;
+      --indigo:    #4f46e5;
+      --indigo-lt: #6366f1;
+      --cyan:      #06b6d4;
+      --cyan-lt:   #22d3ee;
+      --text:      #1e1b18;
+      --muted:     #6b6560;
+      --success:   #16a34a;
+      --warn:      #ca8a04;
+      --danger:    #dc2626;
+      --radius:    12px;
+      --shadow:    0 4px 24px rgba(0,0,0,0.08);
+      --transition: 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+
+    /* ── Nav Bar ── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 52px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    #navbar .brand { font-weight: 700; font-size: 0.95rem; color: var(--indigo); letter-spacing: 0.02em; }
+    #navbar .meta  { font-size: 0.8rem; color: var(--muted); }
+    #navbar .nav-controls { display: flex; gap: 0.5rem; align-items: center; }
+    #navbar button {
+      padding: 0.3rem 0.8rem; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 0.8rem; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    #navbar button:hover { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+
+    /* ── Progress Bar ── */
+    #progress-bar {
+      position: fixed; top: 52px; left: 0; right: 0; z-index: 99;
+      height: 4px; background: var(--border);
+    }
+    #progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--indigo), var(--cyan));
+      transition: width var(--transition);
+    }
+
+    /* ── Slides Container ── */
+    #slides { position: fixed; top: 56px; left: 0; right: 0; bottom: 60px; overflow: hidden; }
+
+    /* ── Individual Slide ── */
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2.5rem 3rem;
+      opacity: 0; transform: translateX(60px);
+      transition: opacity var(--transition), transform var(--transition);
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active  { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .slide.prev    { opacity: 0; transform: translateX(-60px); }
+
+    .slide-inner { width: 100%; max-width: 960px; }
+
+    /* ── Slide Header ── */
+    .slide-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem;
+    }
+    .slide h1 { font-size: 2.6rem; font-weight: 800; line-height: 1.15; margin-bottom: 0.5rem; }
+    .slide h2 { font-size: 1.9rem; font-weight: 700; margin-bottom: 1rem; }
+    .slide h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--indigo); }
+    .slide p, .slide li { font-size: 1rem; line-height: 1.7; color: var(--text); }
+    .slide ul { padding-left: 1.4rem; }
+    .slide ul li { margin-bottom: 0.4rem; }
+
+    /* ── Badge / Tag ── */
+    .badge {
+      display: inline-block; padding: 0.2rem 0.7rem; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em;
+    }
+    .badge-indigo { background: #ede9fe; color: var(--indigo); }
+    .badge-cyan   { background: #cffafe; color: #0e7490; }
+    .badge-green  { background: #dcfce7; color: var(--success); }
+    .badge-warn   { background: #fef9c3; color: var(--warn); }
+    .badge-red    { background: #fee2e2; color: var(--danger); }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+
+    /* ── Stats Row ── */
+    .stats-row { display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; }
+    .stat-card {
+      flex: 1; min-width: 100px; padding: 1rem 1.2rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); text-align: center; box-shadow: var(--shadow);
+    }
+    .stat-card .val { font-size: 2rem; font-weight: 800; color: var(--indigo); }
+    .stat-card .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── Vocab Grid ── */
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .vocab-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.1rem 1.3rem;
+      cursor: pointer; perspective: 600px; box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .vocab-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79,70,229,0.12); }
+    .vocab-card .term { font-weight: 700; font-size: 1rem; color: var(--indigo); margin-bottom: 0.4rem; }
+    .vocab-card .def  { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── Concept Cards ── */
+    .concept-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; margin-top: 1rem; }
+    .concept-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 4px solid var(--indigo);
+      border-radius: var(--radius); padding: 1.2rem 1.4rem; box-shadow: var(--shadow);
+    }
+    .concept-card .concept-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 0.3rem; }
+    .concept-card .concept-title  { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .concept-card .concept-body   { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── Analogy Card ── */
+    .analogy-card {
+      background: linear-gradient(135deg, #ede9fe 0%, #cffafe 100%);
+      border-radius: var(--radius); padding: 1.6rem 2rem; margin-top: 1rem;
+      border: 1px solid #c4b5fd;
+    }
+    .analogy-card .analogy-concept { font-size: 0.75rem; font-weight: 700; color: var(--indigo); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+    .analogy-card .analogy-text    { font-size: 1.05rem; line-height: 1.7; margin-bottom: 0.8rem; }
+    .analogy-card .diagram-box {
+      background: var(--surface); border-radius: 8px; padding: 1rem 1.4rem;
+      font-family: 'Courier New', monospace; font-size: 0.85rem; white-space: pre-wrap;
+      color: var(--text); border: 1px solid var(--border); margin-top: 0.6rem;
+    }
+
+    /* ── Failure Mode Cards ── */
+    .failure-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .failure-card {
+      background: #fff7f7; border: 1px solid #fecaca; border-left: 4px solid var(--danger);
+      border-radius: var(--radius); padding: 1.1rem 1.3rem;
+    }
+    .failure-card .failure-type { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--danger); margin-bottom: 0.3rem; }
+    .failure-card .failure-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; }
+    .failure-card .failure-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.5; }
+    .failure-card .failure-fix  {
+      margin-top: 0.7rem; font-size: 0.83rem; color: var(--success); font-weight: 600;
+      padding-top: 0.5rem; border-top: 1px solid #fecaca;
+    }
+
+    /* ── Exercise Card ── */
+    .exercise-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.6rem 2rem; margin-top: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .exercise-card h3 { color: var(--indigo); font-size: 1.1rem; margin-bottom: 0.6rem; }
+    .exercise-card .task-text { font-size: 1rem; margin-bottom: 1rem; line-height: 1.7; }
+    .exercise-card ol { padding-left: 1.4rem; }
+    .exercise-card ol li { margin-bottom: 0.5rem; font-size: 0.93rem; }
+    .exercise-card .expected {
+      margin-top: 1rem; background: #f0fdf4; border: 1px solid #86efac;
+      border-radius: 8px; padding: 0.8rem 1.1rem; font-size: 0.88rem; color: var(--success);
+    }
+
+    /* ── Checkpoint Timeline ── */
+    .timeline { position: relative; padding: 1rem 0; margin-top: 1rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+      width: 3px; background: linear-gradient(180deg, var(--indigo), var(--cyan));
+      border-radius: 3px;
+    }
+    .timeline-item { display: flex; align-items: flex-start; gap: 1.2rem; margin-bottom: 1.5rem; position: relative; }
+    .timeline-dot {
+      flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+      background: var(--indigo); color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.85rem; box-shadow: 0 0 0 4px var(--bg);
+      position: relative; z-index: 1;
+    }
+    .timeline-content {
+      flex: 1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.3rem; box-shadow: var(--shadow);
+    }
+    .timeline-content .tl-layer { font-weight: 700; color: var(--indigo); font-size: 0.95rem; }
+    .timeline-content .tl-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .timeline-content .tl-concepts { font-size: 0.87rem; color: var(--text); line-height: 1.6; }
+    .timeline-content .tl-ts { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; }
+
+    /* ── Summary Points ── */
+    .summary-list { list-style: none; padding: 0; margin-top: 1rem; }
+    .summary-list li {
+      display: flex; align-items: flex-start; gap: 0.8rem;
+      padding: 0.8rem 1rem; margin-bottom: 0.6rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .summary-list li::before {
+      content: '✓'; flex-shrink: 0; width: 22px; height: 22px;
+      background: var(--indigo); color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; margin-top: 2px;
+    }
+
+    .next-steps-box {
+      margin-top: 1.5rem; background: linear-gradient(135deg, var(--indigo) 0%, var(--cyan) 100%);
+      color: #fff; border-radius: var(--radius); padding: 1.2rem 1.6rem;
+    }
+    .next-steps-box h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; opacity: 0.8; }
+    .next-steps-box p  { font-size: 1rem; }
+
+    /* ── Dot Indicators ── */
+    #dots {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 100;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border); cursor: pointer; transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active { background: var(--indigo); transform: scale(1.4); }
+
+    /* ── Arrow Buttons ── */
+    #arrow-prev, #arrow-next {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      z-index: 100; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 50%; width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.2rem; box-shadow: var(--shadow);
+      transition: background 0.2s, color 0.2s;
+    }
+    #arrow-prev { left: 16px; }
+    #arrow-next { right: 16px; }
+    #arrow-prev:hover, #arrow-next:hover { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .slide { padding: 1.2rem 1rem; }
+      .slide h1 { font-size: 1.8rem; }
+      .slide h2 { font-size: 1.4rem; }
+      .vocab-grid, .concept-grid, .failure-grid { grid-template-columns: 1fr; }
+      #arrow-prev, #arrow-next { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV BAR -->
+<nav id="navbar">
+  <span class="brand">{{ lesson_id }} — {{ lesson_title }}</span>
+  <span class="meta">{{ chapter_title }} &nbsp;·&nbsp; {{ lesson_date }}</span>
+  <div class="nav-controls">
+    <span id="slide-counter" style="font-size:0.8rem;color:var(--muted);margin-right:0.5rem;">1 / 8</span>
+    <button onclick="goTo(0)">Start</button>
+    <button onclick="goTo(totalSlides-1)">End</button>
+  </div>
+</nav>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"><div id="progress-fill" style="width:12.5%"></div></div>
+
+<!-- ARROW NAVIGATION -->
+<button id="arrow-prev" onclick="prevSlide()" aria-label="Previous">&#8592;</button>
+<button id="arrow-next" onclick="nextSlide()" aria-label="Next">&#8594;</button>
+
+<!-- SLIDES -->
+<div id="slides">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" data-index="0">
+    <div class="slide-inner">
+      <div class="slide-label">{{ chapter_badge }}</div>
+      <h1>{{ lesson_title }}</h1>
+      {% if lesson_subtitle %}<p style="font-size:1.15rem;color:var(--muted);margin-bottom:1.2rem;">{{ lesson_subtitle }}</p>{% endif %}
+      <div class="tags">
+        <span class="badge badge-indigo">{{ layer_label }}</span>
+        <span class="badge badge-cyan">{{ lesson_id }}</span>
+        {% for tag in lesson_tags %}<span class="badge badge-green">{{ tag }}</span>{% endfor %}
+      </div>
+      <div class="stats-row" style="margin-top:2rem;">
+        <div class="stat-card"><div class="val">{{ concept_count }}</div><div class="lbl">Concepts</div></div>
+        <div class="stat-card"><div class="val">{{ vocab_count }}</div><div class="lbl">Terms</div></div>
+        <div class="stat-card"><div class="val">{{ checkpoint_count }}</div><div class="lbl">Checkpoints</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: VOCABULARY GRID -->
+  <div class="slide" data-index="1">
+    <div class="slide-inner">
+      <div class="slide-label">Terminology First</div>
+      <h2>Key Vocabulary</h2>
+      <p style="color:var(--muted);margin-bottom:0.5rem;">{{ vocab_count }} terms defined for this lesson. Hover any card to see the definition.</p>
+      <div class="vocab-grid">
+        {% for v in vocabulary %}
+        <div class="vocab-card" title="{{ v.definition }}">
+          <div class="term">{{ v.term }}</div>
+          <div class="def">{{ v.definition }}</div>
+        </div>
+        {% endfor %}
+        {% if not vocabulary %}
+        <p style="color:var(--muted);">No vocabulary recorded for this lesson.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: CORE CONCEPTS -->
+  <div class="slide" data-index="2">
+    <div class="slide-inner">
+      <div class="slide-label">Explain with Depth</div>
+      <h2>Core Concepts</h2>
+      <div class="concept-grid">
+        {% for c in core_concepts %}
+        <div class="concept-card">
+          <div class="concept-label">{{ c.label }}</div>
+          <div class="concept-title">{{ c.title }}</div>
+          <div class="concept-body">{{ c.summary }}</div>
+        </div>
+        {% endfor %}
+        {% if not core_concepts %}
+        <p style="color:var(--muted);">No concepts recorded for this lesson.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: ANALOGIES -->
+  <div class="slide" data-index="3">
+    <div class="slide-inner">
+      <div class="slide-label">Analogize &amp; Visualize</div>
+      <h2>Analogies &amp; Mental Models</h2>
+      {% for a in analogies %}
+      <div class="analogy-card" style="margin-bottom:1rem;">
+        <div class="analogy-concept">{{ a.concept }}</div>
+        <div class="analogy-text">{{ a.analogy }}</div>
+        {% if a.diagram %}<div class="diagram-box">{{ a.diagram }}</div>{% endif %}
+      </div>
+      {% endfor %}
+      {% if not analogies %}
+      <p style="color:var(--muted);">No analogies recorded for this lesson.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- SLIDE 5: WHAT CAN GO WRONG -->
+  <div class="slide" data-index="4">
+    <div class="slide-inner">
+      <div class="slide-label">What Goes Wrong</div>
+      <h2>Failure Modes &amp; Anti-Patterns</h2>
+      <div class="failure-grid">
+        {% for f in failure_modes %}
+        <div class="failure-card">
+          <div class="failure-type">{{ f.type }}</div>
+          <div class="failure-name">{{ f.name }}</div>
+          <div class="failure-desc">{{ f.description }}</div>
+          {% if f.fix %}<div class="failure-fix">Fix: {{ f.fix }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        {% if not failure_modes %}
+        <p style="color:var(--muted);">No failure modes recorded for this lesson.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: EXERCISES -->
+  <div class="slide" data-index="5">
+    <div class="slide-inner">
+      <div class="slide-label">Hands-On Practice</div>
+      <h2>Exercises</h2>
+      {% for e in exercises %}
+      <div class="exercise-card" style="margin-bottom:1rem;">
+        <h3>{{ e.title }}</h3>
+        <div class="task-text">{{ e.task }}</div>
+        {% if e.steps %}
+        <ol>{% for s in e.steps %}<li>{{ s }}</li>{% endfor %}</ol>
+        {% endif %}
+        {% if e.expected_output %}
+        <div class="expected"><strong>Expected outcome:</strong> {{ e.expected_output }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% if not exercises %}
+      <p style="color:var(--muted);">No exercises recorded for this lesson.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- SLIDE 7: CHECKPOINT TIMELINE -->
+  <div class="slide" data-index="6">
+    <div class="slide-inner">
+      <div class="slide-label">Progress</div>
+      <h2>Checkpoint Timeline</h2>
+      <div class="timeline">
+        {% for cp in checkpoints %}
+        <div class="timeline-item">
+          <div class="timeline-dot">{{ cp.layer }}</div>
+          <div class="timeline-content">
+            <div class="tl-layer">{{ cp.layer }} — {{ cp.layer_label }}</div>
+            <div class="tl-concepts">{{ cp.concepts }}</div>
+            <div class="tl-ts">{{ cp.timestamp }}</div>
+          </div>
+        </div>
+        {% endfor %}
+        {% if not checkpoints %}
+        <p style="color:var(--muted);">No checkpoints recorded for this lesson.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: SUMMARY -->
+  <div class="slide" data-index="7">
+    <div class="slide-inner">
+      <div class="slide-label">Lesson Complete</div>
+      <h2>Summary</h2>
+      <ul class="summary-list">
+        {% for pt in summary_points %}<li>{{ pt }}</li>{% endfor %}
+        {% if not summary_points %}<li>Lesson summary not yet recorded.</li>{% endif %}
+      </ul>
+      {% if next_steps %}
+      <div class="next-steps-box">
+        <h3>Next Steps</h3>
+        <p>{{ next_steps }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div><!-- /#slides -->
+
+<!-- DOT INDICATORS -->
+<div id="dots">
+  {% for i in range(8) %}
+  <div class="dot {% if i == 0 %}active{% endif %}" onclick="goTo({{ i }})" title="Slide {{ i + 1 }}"></div>
+  {% endfor %}
+</div>
+
+<script>
+  const totalSlides = 8;
+  let current = 0;
+
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.querySelectorAll('.dot');
+  const fill   = document.getElementById('progress-fill');
+  const counter = document.getElementById('slide-counter');
+
+  function updateUI() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'prev');
+      if (i === current)      s.classList.add('active');
+      else if (i < current)   s.classList.add('prev');
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    fill.style.width = ((current + 1) / totalSlides * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + totalSlides;
+  }
+
+  function goTo(n) {
+    if (n < 0 || n >= totalSlides) return;
+    current = n;
+    updateUI();
+  }
+
+  function nextSlide() { goTo(current + 1); }
+  function prevSlide() { goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown')  nextSlide();
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')    prevSlide();
+    if (e.key === 'Home') goTo(0);
+    if (e.key === 'End')  goTo(totalSlides - 1);
+  });
+
+  // Touch / swipe
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) dx < 0 ? nextSlide() : prevSlide();
+    touchX = null;
+  });
+
+  updateUI();
+</script>
+</body>
+</html>

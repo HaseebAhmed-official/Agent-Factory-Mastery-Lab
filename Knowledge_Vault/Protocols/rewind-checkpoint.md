@@ -114,9 +114,27 @@ Your choice:
 
 ---
 
+### Confirmation Gate (Mandatory Before Execution)
+
+Before executing any rewind, display:
+```
+⚠️ REWIND CONFIRMATION
+
+You selected: Checkpoint L{N} — {concepts covered}
+
+This will restore context to that point. Content taught after this checkpoint will need to be re-covered.
+
+Type **CONFIRM** to proceed, or anything else to cancel.
+```
+
+If user types CONFIRM (case-insensitive): proceed with rewind execution.
+If user types anything else: cancel and return to current state with message: "Rewind cancelled — continuing from current position."
+
+---
+
 ## STAGE 2: Context Restoration
 
-Once user selects checkpoint (e.g., "L2"):
+Once user selects checkpoint (e.g., "L2") and confirms:
 
 ### Step 1: Read Selected Checkpoint File
 

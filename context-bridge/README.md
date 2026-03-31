@@ -51,7 +51,7 @@ Older bridge content moved here to keep active file lean.
 
 ## Structure
 
-Each context bridge includes 16 sections:
+Each context bridge includes 18 sections:
 
 ### 1. Session Metadata
 - Date, lesson, current checkpoint, session number
@@ -100,6 +100,14 @@ Each context bridge includes 16 sections:
 
 ### 16. Current Checkpoint State
 - Active layer, last checkpoint time, context window status
+
+### 17. Session History
+- Rows appended per session: date, lessons covered, checkpoints created, notes
+- Replaces session numbering — provides full session audit trail
+
+### 18. Backup Log
+- Auto-populated backup file references
+- Tracks every backup created with timestamp and triggering event
 
 ---
 
@@ -200,3 +208,31 @@ See `Knowledge_Vault/Protocols/resume-protocol.md` for the full cold-start workf
 ---
 
 **This directory is auto-populated by Professor Agent during Checkpoint and Finish commands.**
+
+---
+
+## Spaced Review Scheduling
+
+The Vocabulary Bank (Section 7) tracks spaced review state for every term:
+
+| Field | Purpose |
+|-------|---------|
+| `LastReview` | Date the term was last recalled in a pre-lesson retrieval |
+| `NextReviewDue` | Date when the term should next be surfaced for retrieval |
+| `ReviewCount` | Number of successful recalls (drives interval growth) |
+| `ConfidenceRating` | Student's self-rated confidence 1-5 after the lesson it was introduced |
+
+**Intervals**: 1 day → 3 days → 7 days → 14 days → 30 days (Leitner system)
+
+At session start, `pre-lesson-retrieval.md` protocol surfaces all terms where `NextReviewDue <= today`.
+
+---
+
+## Silent Failure Detection
+
+The `repair_needed` field in `status.json` is set to `true` automatically when:
+- An atomic write fails
+- A bridge section update fails
+- A health check finds missing sections
+
+On cold start, if `status.json` contains `"repair_needed": true`, Professor Agent surfaces this immediately and prompts for repair before teaching begins.

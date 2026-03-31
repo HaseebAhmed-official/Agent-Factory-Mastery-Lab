@@ -7,6 +7,20 @@
 
 ---
 
+## FAST START (Run First)
+
+Before reading master-cumulative.md, read `context-bridge/status.json`:
+```json
+// Single file read → instant state:
+// lesson, layer, concept, last_checkpoint, status
+```
+Display recovery banner immediately from status.json. Then load full bridge for detail.
+
+Run health check: `python3 scripts/health-check.py`
+If UNHEALTHY: surface specific issues before proceeding.
+
+---
+
 ## DIRECTIVE
 
 At the **START of every conversation**, before greeting the student or taking any other action, execute this detection and recovery workflow **silently** (no tool-call permission prompts visible to user). This entire stage takes under 5 seconds and is invisible unless recovery is needed.
