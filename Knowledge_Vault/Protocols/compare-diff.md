@@ -355,7 +355,7 @@
 
    ### Low Priority (Optional)
    3. **Contribute back**: Consider sharing your EXTRA content (case studies, patterns) with community
-   4. **Refine notes**: Ensure EXTRA concepts align with curriculum scope (Part 1 only)
+   4. **Refine notes**: Ensure EXTRA concepts align with curriculum scope (Parts 0–3, 5–7)
 
    ═══════════════════════════════════════════════════════
 

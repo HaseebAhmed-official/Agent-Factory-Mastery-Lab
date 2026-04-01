@@ -27,9 +27,9 @@
    - Build local lesson inventory:
      ```json
      {
-       "3.1": {
-         "title": "Origin Story",
-         "path": "Knowledge_Vault/Curriculum/chapter-3-general-agents/3.1-origin-story.md",
+       "14.1": {
+         "title": "Claude Code Origin Story",
+         "path": "Knowledge_Vault/Curriculum/chapter-14-claude-code.md",
          "last_modified": "2026-02-15T10:30:00Z",
          "hash": "abc123..."
        }
@@ -37,7 +37,7 @@
      ```
 
 2. **Check connectivity**:
-   - Attempt to fetch `https://agentfactory.panaversity.org/docs/General-Agents-Foundations/`
+   - Attempt to fetch `https://agentfactory.panaversity.org/docs/`
    - If fails → Error: "Cannot connect to curriculum source. Check internet connection."
    - If succeeds → Continue
 
@@ -45,7 +45,7 @@
    ```
    🔄 SYNC CURRICULUM
 
-   Source: https://agentfactory.panaversity.org/docs/General-Agents-Foundations/
+   Source: https://agentfactory.panaversity.org/docs/
    Local lessons: {count}
    Last sync: {timestamp or "Never"}
 
@@ -66,8 +66,8 @@
    **Script behavior**:
    - Crawl official website table of contents
    - Extract lesson list with:
-     - Chapter number (1-6)
-     - Lesson number (e.g., 3.1, 3.15, 3.17)
+     - Chapter number (1-40, 56-57, 61-90)
+     - Lesson number (e.g., 14.1, 14.15, 14.17)
      - Lesson title
      - URL
      - Optional: Published date (if available in metadata)
@@ -119,33 +119,33 @@ Generated: 2026-03-03 16:45
 - DEPRECATED lessons: 1
 
 ### NEW Lessons
-1. **3.25** - Advanced MCP Integration
+1. **14.42** - Advanced MCP Integration (example)
    - URL: https://agentfactory.panaversity.org/.../advanced-mcp
-   - Action: APPEND to Chapter 3
+   - Action: APPEND to Chapter 14
 
-2. **4.8** - Custom Tool Development
+2. **15.11** - Custom Tool Development (example)
    - URL: https://agentfactory.panaversity.org/.../custom-tools
-   - Action: APPEND to Chapter 4
+   - Action: APPEND to Chapter 15
 
-3. **5.12** - Multi-Agent Orchestration
+3. **16.12** - Multi-Agent Orchestration (example)
    - URL: https://agentfactory.panaversity.org/.../multi-agent
-   - Action: APPEND to Chapter 5
+   - Action: APPEND to Chapter 16
 
 ### UPDATED Lessons
-1. **3.15** - Hooks and Extensibility
+1. **14.15** - Hooks: Event-Driven Automation (example)
    - Local hash: abc123...
    - Remote hash: def456...
    - Changes detected: Content updated
    - Action: REPLACE local with remote
 
-2. **3.22** - CoWork Terminal to Desktop
+2. **14.26** - From Terminal to Desktop: The Cowork Story (example)
    - Local hash: ghi789...
    - Remote hash: jkl012...
    - Changes detected: Content updated
    - Action: REPLACE local with remote
 
 ### DEPRECATED Lessons
-1. **3.5** - Legacy Integration Patterns
+1. **14.x** - Legacy Integration Patterns (example)
    - Status: Removed from official curriculum
    - Action: ARCHIVE to `.deprecated/`
 ```
@@ -208,15 +208,15 @@ For each lesson to sync:
 2. **Save to local**:
    - Determine target path:
      ```
-     Knowledge_Vault/Curriculum/chapter-{N}-{name}/{X.Y}-{lesson-slug}.md
+     Knowledge_Vault/Curriculum/chapter-{N}-{name}.md
      ```
    - Write content to file
    - Add YAML frontmatter:
      ```yaml
      ---
-     lesson: "3.25"
+     lesson: "14.42"
      title: "Advanced MCP Integration"
-     chapter: 3
+     chapter: 14
      url: "https://agentfactory.panaversity.org/.../advanced-mcp"
      synced: "2026-03-03T16:45:00Z"
      hash: "xyz789..."
@@ -285,16 +285,16 @@ For each lesson to sync:
      SYNC LOG: 2026-03-03 16:45
 
      NEW:
-     - 3.25: Advanced MCP Integration (fetched, saved)
-     - 4.8: Custom Tool Development (fetched, saved)
-     - 5.12: Multi-Agent Orchestration (fetched, saved)
+     - 14.42: Advanced MCP Integration (fetched, saved) [example]
+     - 15.11: Custom Tool Development (fetched, saved) [example]
+     - 16.12: Multi-Agent Orchestration (fetched, saved) [example]
 
      UPDATED:
-     - 3.15: Hooks and Extensibility (backed up, replaced)
-     - 3.22: CoWork Terminal to Desktop (backed up, replaced)
+     - 14.15: Hooks: Event-Driven Automation (backed up, replaced) [example]
+     - 14.26: From Terminal to Desktop (backed up, replaced) [example]
 
      DEPRECATED:
-     - 3.5: Legacy Integration Patterns (archived)
+     - 14.x: Legacy Integration Patterns (archived) [example]
 
      Manifest updated: ✓
      Search indexes rebuilt: ✓
@@ -315,8 +315,8 @@ For each lesson to sync:
    Sync log: logs/sync-2026-03-03-1645.log
 
    Next steps:
-   - Review new lessons: 3.25, 4.8, 5.12
-   - Check updated lessons: 3.15, 3.22
+   - Review new lessons: 14.42, 15.11, 16.12 [examples]
+   - Check updated lessons: 14.15, 14.26 [examples]
    - Study as usual
 
    Ready to continue?
@@ -355,9 +355,9 @@ For each lesson to sync:
    ⚠️ CURRICULUM STRUCTURE CHANGED
 
    Remote curriculum has new organization:
-   - Chapter 3 (old): General Agents
-   - Chapter 3a (new): Claude Code Agents
-   - Chapter 3b (new): Custom Agents
+   - Chapter 14 (old): General Agents - Claude Code & Cowork
+   - Chapter 14a (new): Claude Code Agents
+   - Chapter 14b (new): Custom Agents
 
    Cannot auto-merge. Manual review required.
 
@@ -379,7 +379,7 @@ For each lesson to sync:
 
 ### Case 4: Lesson Renumbered
 
-**Scenario**: Lesson 3.15 becomes 3.16 in remote curriculum
+**Scenario**: Lesson 14.15 becomes 14.16 in remote curriculum
 
 **Handling**:
 1. Detect title match but number mismatch
@@ -387,12 +387,12 @@ For each lesson to sync:
    ```
    🔄 LESSON RENUMBERED DETECTED
 
-   Local: 3.15 - Hooks and Extensibility
-   Remote: 3.16 - Hooks and Extensibility (same title)
+   Local: 14.15 - Hooks: Event-Driven Automation
+   Remote: 14.16 - Hooks: Event-Driven Automation (same title)
 
    Likely renumbered. What to do?
 
-   1. Rename local (3.15 → 3.16)
+   1. Rename local (14.15 → 14.16)
    2. Keep both (treat as separate lessons)
    3. Skip this lesson
    ```
@@ -426,16 +426,16 @@ For each lesson to sync:
    SELECT LESSONS TO SYNC
 
    ✨ NEW LESSONS (3):
-   [ ] 3.25 - Advanced MCP Integration
-   [ ] 4.8 - Custom Tool Development
-   [ ] 5.12 - Multi-Agent Orchestration
+   [ ] 14.42 - Advanced MCP Integration (example)
+   [ ] 15.11 - Custom Tool Development (example)
+   [ ] 16.12 - Multi-Agent Orchestration (example)
 
    🔄 UPDATED LESSONS (2):
-   [ ] 3.15 - Hooks and Extensibility
-   [ ] 3.22 - CoWork Terminal to Desktop
+   [ ] 14.15 - Hooks: Event-Driven Automation (example)
+   [ ] 14.26 - From Terminal to Desktop: The Cowork Story (example)
 
    ⚠️ DEPRECATED LESSONS (1):
-   [ ] 3.5 - Legacy Integration Patterns (archive?)
+   [ ] 14.x - Legacy Integration Patterns (archive?) (example)
 
    Use AskUserQuestion tool with multiSelect: true
    ```
@@ -488,50 +488,51 @@ For each lesson to sync:
   "version": "1.0",
   "last_sync": "2026-03-03T16:45:00Z",
   "source": {
-    "base_url": "https://agentfactory.panaversity.org/docs/General-Agents-Foundations/",
-    "toc_url": "https://agentfactory.panaversity.org/docs/General-Agents-Foundations/"
+    "base_url": "https://agentfactory.panaversity.org/docs/",
+    "toc_url": "https://agentfactory.panaversity.org/docs/"
   },
   "lessons": {
-    "3.1": {
-      "chapter": 3,
-      "title": "Origin Story",
-      "url": "https://agentfactory.panaversity.org/.../origin-story",
-      "local_path": "Knowledge_Vault/Curriculum/chapter-3-general-agents/3.1-origin-story.md",
+    "14.1": {
+      "chapter": 14,
+      "title": "Claude Code Origin Story",
+      "url": "https://agentfactory.panaversity.org/docs/General-Agents-Foundations/general-agents/origin-story",
+      "local_path": "Knowledge_Vault/Curriculum/chapter-14-claude-code.md",
       "hash": "abc123def456...",
       "synced_at": "2026-02-15T10:30:00Z",
       "status": "synced"
     },
-    "3.15": {
-      "chapter": 3,
-      "title": "Hooks and Extensibility",
-      "url": "https://agentfactory.panaversity.org/.../hooks-and-extensibility",
-      "local_path": "Knowledge_Vault/Curriculum/chapter-3-general-agents/3.15-hooks-and-extensibility.md",
+    "14.15": {
+      "chapter": 14,
+      "title": "Hooks: Event-Driven Automation",
+      "url": "https://agentfactory.panaversity.org/docs/General-Agents-Foundations/general-agents/hooks-and-extensibility",
+      "local_path": "Knowledge_Vault/Curriculum/chapter-14-claude-code.md",
       "hash": "def456ghi789...",
       "previous_hash": "abc123old...",
       "synced_at": "2026-03-03T16:45:00Z",
       "status": "updated"
     },
-    "3.5": {
-      "chapter": 3,
-      "title": "Legacy Integration Patterns",
+    "14.x": {
+      "chapter": 14,
+      "title": "Legacy Integration Patterns (example deprecated entry)",
       "url": null,
-      "local_path": ".deprecated/3.5-legacy-integration-patterns.md",
+      "local_path": ".deprecated/14.x-legacy-integration-patterns.md",
       "hash": "old789xyz...",
       "deprecated_at": "2026-03-03T16:45:00Z",
       "status": "deprecated"
     }
   },
   "stats": {
-    "total_lessons": 42,
-    "synced": 40,
-    "deprecated": 2,
-    "chapters": {
-      "1": 6,
-      "2": 8,
-      "3": 12,
-      "4": 7,
-      "5": 5,
-      "6": 4
+    "total_lessons": "{computed from all parts}",
+    "synced": "{computed}",
+    "deprecated": 0,
+    "parts": {
+      "0": "Ch 0-11",
+      "1": "Ch 12-18",
+      "2": "Ch 19-24",
+      "3": "Ch 25-40",
+      "5": "Ch 56-57",
+      "6": "Ch 61-78",
+      "7": "Ch 79-90"
     }
   }
 }
