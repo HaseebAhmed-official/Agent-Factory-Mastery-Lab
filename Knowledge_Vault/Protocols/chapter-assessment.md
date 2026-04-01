@@ -98,21 +98,21 @@ Re-teach the missed concepts, then offer ONE retry. After retry, mark chapter co
 
 ## BUILT-IN SCENARIOS
 
-### Chapter 12: The AI Agent Factory Paradigm
+### Chapter 1: The New Paradigm
 A company wants to replace their customer service chatbot with an AI agent that "does everything automatically." They handle 500 queries/day. They're excited about zero human involvement.
 
 Tasks: (1) Diagnose the unrealistic expectations. (2) Prescribe a realistic transition plan. (3) Identify what could still fail after your plan.
 
 *Tests*: Agent vs. chatbot distinction, digital FTE concept, agent maturity framework, realistic capability framing
 
-### Chapter 13: Markdown & Specification
+### Chapter 2: Markdown & Specification
 A developer shows you a CLAUDE.md that is 3000 lines of dense prose, no section headers, 200+ mixed behavioral rules and background context. Agents behave unpredictably.
 
 Tasks: (1) Diagnose the problems. (2) Prescribe a rewrite strategy. (3) What will still go wrong after your fix?
 
 *Tests*: CLAUDE.md structure, formatting principles, cognitive load for LLMs, specification quality
 
-### Chapter 14: Claude Code & Cowork
+### Chapter 3: Claude Code
 An agent fails silently every Monday morning — no errors, tool calls stop being logged after 9am, recovers by noon. No weekend code changes.
 
 Tasks: (1) Diagnose the failure. (2) What would you check first? (3) What mechanism is likely involved?
