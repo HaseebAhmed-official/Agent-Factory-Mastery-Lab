@@ -71,9 +71,9 @@
 
 2. **Per-Chapter Progress**:
    ```
-   Chapter 1: 4/6 lessons (67%)
-   Chapter 2: 0/8 lessons (0%)
-   Chapter 3: 5/12 lessons (42%)
+   Chapter 12: 4/10 lessons (40%)
+   Chapter 13: 0/5 lessons (0%)
+   Chapter 14: 5/41 lessons (12%)
    ...
    ```
 
@@ -107,11 +107,11 @@
 
 ```markdown
 ═══════════════════════════════════════════════════════════════
-  AGENT FACTORY PART 1: PROGRESS DASHBOARD
+  AGENT FACTORY: PROGRESS DASHBOARD
 ═══════════════════════════════════════════════════════════════
 
 Generated: 2026-03-03 17:00
-Course: Agent Factory Part 1 - General Agents Foundations (AIAF-2026)
+Course: The AI Agent Factory (AIAF-2026)
 Student: [Your Name]
 
 ═══════════════════════════════════════════════════════════════
@@ -122,9 +122,9 @@ Student: [Your Name]
 
 [████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 12%
 
-**Status**: Early Progress - Chapter 3 Focus
+**Status**: Early Progress - Chapter 14 Focus
 
-**Current Lesson**: 3.23 - CoWork Getting Started
+**Current Lesson**: 14.28 - Cowork in Action: Practical Workflows
 **Last Session**: 2026-03-03 (today)
 
 ═══════════════════════════════════════════════════════════════
@@ -133,28 +133,29 @@ Student: [Your Name]
 
 | Chapter | Title | Progress | Status |
 |---------|-------|----------|--------|
-| **1** | Introduction to Agentic AI | 0/6 (0%) | ⏸️ Skipped (will cover later) |
-| **2** | Foundations & Terminology | 0/8 (0%) | ⏸️ Skipped (defining terms inline) |
-| **3** | General Agents | ⭐ 5/12 (42%) | 🔄 IN PROGRESS |
-| **4** | Specialized Agents | 0/7 (0%) | 🔒 Locked |
-| **5** | Multi-Agent Systems | 0/5 (0%) | 🔒 Locked |
-| **6** | Advanced Topics | 0/4 (0%) | 🔒 Locked |
+| **12** | The AI Agent Factory Paradigm | 0/10 (0%) | 🔒 Locked |
+| **13** | Markdown -- Writing Instructions | 0/5 (0%) | 🔒 Locked |
+| **14** | General Agents -- Claude Code & Cowork | ⭐ 5/41 (12%) | 🔄 IN PROGRESS |
+| **15** | Effective Context Engineering | 0/10 (0%) | 🔒 Locked |
+| **16** | Spec-Driven Development | 0/11 (0%) | 🔒 Locked |
+| **17** | Seven Principles of General Agent Problem Solving | 0/11 (0%) | 🔒 Locked |
+| **18** | Claude Code for Teams, CI/CD & Advanced Config | 0/10 (0%) | 🔒 Locked |
 
-**Current Focus**: Chapter 3 (General Agents)
+**Current Focus**: Chapter 14 (General Agents -- Claude Code & Cowork)
 
 ═══════════════════════════════════════════════════════════════
 
 ## ✅ COMPLETED LESSONS (5)
 
-### Chapter 3: General Agents
+### Chapter 14: General Agents -- Claude Code & Cowork
 
-1. ✅ **3.1** - Origin Story
+1. ✅ **14.1** - Claude Code Origin Story
    - Completed: 2026-03-01
    - Checkpoints: 3 (L1, L2, L3)
    - Quiz: 80% (B+)
    - Study time: ~4 hours
 
-2. ✅ **3.15** - Hooks and Extensibility
+2. ✅ **14.15** - Hooks: Event-Driven Automation
    - Completed: 2026-03-02
    - Checkpoints: 3 (L1, L2, L3)
    - Quiz: 84% (B+)
@@ -482,14 +483,14 @@ Rationale:
 ```
 📊 QUICK STATUS
 
-Course: Agent Factory Part 1
+Course: The AI Agent Factory
 Progress: 12% (5/42 lessons)
-Chapter 3: 5/12 (42%) - IN PROGRESS
-Current: 3.23 - CoWork Getting Started (L1 complete)
+Chapter 14: 5/41 (12%) - IN PROGRESS
+Current: 14.28 - Cowork in Action: Practical Workflows (L1 complete)
 
 Quiz Avg: 82% (B+)
 Study Time: ~13.5 hours
-Next: Continue 3.23 (L2, L3)
+Next: Continue 14.28 (L2, L3)
 
 Type "Status" for detailed dashboard.
 ```
@@ -652,18 +653,19 @@ jq '.summary.percentage' assessments/results/*.json
 ```
 📊 WELCOME TO AGENT FACTORY PART 1
 
-Course: Agent Factory Part 1 - General Agents Foundations
-Progress: 0% (0/42 lessons)
+Course: The AI Agent Factory
+Progress: 0% (0/{total} lessons)
 
 You haven't started any lessons yet.
 
 Ready to begin?
 
-Recommended starting point:
-- Chapter 3: General Agents (most practical)
-- Start with Lesson 3.1: Origin Story
+Recommended starting points:
+- Part 0, Chapter 1: Asking Better Questions (thinking skills)
+- Part 1, Chapter 12: The AI Agent Factory Paradigm (core paradigm)
+- Part 1, Chapter 14: General Agents -- Claude Code & Cowork (most hands-on)
 
-Type "3.1" to begin!
+Type a chapter.lesson number (e.g., "12.1") to begin!
 ```
 
 ### Case 2: Context Bridge Not Found
